@@ -4,8 +4,8 @@ version = "0.0.0"
 description = "Agent-Kernel monorepo workspace"
 requires-python = ">=3.11,<3.13"
 dependencies = [
-    "agentkernel-standalone",
-    "agentkernel-distributed",
+    "agentkernel-standalone[all]",
+    "agentkernel-distributed[all]",
 ]
 
 [tool.uv]

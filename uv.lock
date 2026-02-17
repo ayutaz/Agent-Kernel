@@ -146,8 +146,8 @@ name = "agentkernel-workspace"
 version = "0.0.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "agentkernel-distributed" },
-    { name = "agentkernel-standalone" },
+    { name = "agentkernel-distributed", extra = ["all"] },
+    { name = "agentkernel-standalone", extra = ["all"] },
 ]
 
 [package.dev-dependencies]
@@ -160,8 +160,8 @@ panel = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agentkernel-distributed", editable = "packages/agentkernel-distributed" },
-    { name = "agentkernel-standalone", editable = "packages/agentkernel-standalone" },
+    { name = "agentkernel-distributed", extras = ["all"], editable = "packages/agentkernel-distributed" },
+    { name = "agentkernel-standalone", extras = ["all"], editable = "packages/agentkernel-standalone" },
 ]
 
 [package.metadata.requires-dev]
