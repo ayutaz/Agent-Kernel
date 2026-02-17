@@ -1,5 +1,9 @@
 'python -m examples.distributed_test.run_simulation'
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 project_path = os.path.dirname(os.path.abspath(__file__))
 os.environ["MAS_PROJECT_ABS_PATH"] = project_path
 os.environ["MAS_PROJECT_REL_PATH"] = "examples.distributed_test"

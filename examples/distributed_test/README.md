@@ -4,15 +4,32 @@ This example demonstrates how to build a simple Multi-Agent System using Agent-K
 To simplify the process, we have provided basic implementations for five core plugins: Perceive, Plan, Invoke, Communication, and Space. The remaining plugins are structured as placeholders (using pass) to allow for easy customization and expansion by the user.
 
 # Quick Start
-1. Set your api key in **`examples/distributed_test/configs/models_config.yaml`**
+1. Set your API key using one of the following methods:
 
+    **Option A: `.env` file (Recommended)**
+
+    Create a `.env` file in the repository root:
+    ```
+    OPENAI_API_KEY=sk-your-api-key
+    ```
+
+    **Option B: Environment variable**
+    ```bash
+    export OPENAI_API_KEY=sk-your-api-key
+    ```
+
+    **Option C: Direct YAML configuration**
+
+    Edit **`examples/distributed_test/configs/models_config.yaml`** and add the `api_key` field:
     ```yaml
     - name: OpenAIProvider
-      model: your-model-name
-      api_key: your-api-key
-      base_url: your-base-url
-      capabilities: ["your-capabilities"] # e.g., capabilities: ["chat"]
+      model: gpt-4o-mini
+      api_key: "sk-your-api-key"
+      base_url: "https://api.openai.com/v1"
+      capabilities: ["chat"]
     ```
+
+    > The default configuration uses `gpt-4o-mini` and the OpenAI API. If `api_key` is omitted from the YAML, it falls back to the `OPENAI_API_KEY` environment variable.
 
 2. Install the required dependencies:
     ```bash
@@ -25,5 +42,3 @@ To simplify the process, we have provided basic implementations for five core pl
     cd Agent-Kernel
     uv run python -m examples.distributed_test.run_simulation
     ```
-        
-            

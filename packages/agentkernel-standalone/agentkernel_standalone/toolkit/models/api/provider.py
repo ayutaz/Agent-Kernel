@@ -1,5 +1,6 @@
 """Abstract base classes for model providers."""
 
+import os
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Dict, Any, List, Optional, Tuple
@@ -57,7 +58,7 @@ class ModelProvider(ABC):
 
         self.base_url: str = model_config["base_url"]
         self.model: str = model_config["model"]
-        self.api_key: str | None = model_config.get("api_key")
+        self.api_key: str | None = model_config.get("api_key") or os.environ.get("OPENAI_API_KEY")
         self.capabilities: List[str] = model_config.get("capabilities", ["chat"])
         self.config: Dict[str, Any] = model_config
 

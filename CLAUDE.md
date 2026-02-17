@@ -37,7 +37,12 @@ uv run python -m examples.standalone_test.run_simulation
 # 分散版
 uv run python -m examples.distributed_test.run_simulation
 ```
-実行前に `examples/*/configs/models_config.yaml` にAPIキーを設定すること。
+実行前にAPIキーを設定すること。以下のいずれかの方法:
+1. **`.env`ファイル（推奨）** — リポジトリルートに `.env` を作成し `OPENAI_API_KEY=sk-...` を記載
+2. **環境変数** — `export OPENAI_API_KEY=sk-...`（シェルで直接設定）
+3. **YAML直接指定** — `examples/*/configs/models_config.yaml` の `api_key` フィールドに記載
+
+`run_simulation.py` が起動時に `python-dotenv` で `.env` を読み込み、`ModelProvider` が YAML の `api_key` → 環境変数 `OPENAI_API_KEY` の順にフォールバックする。
 
 ### インストール（PyPIエンドユーザー向け）
 ```bash
@@ -146,7 +151,7 @@ RESOURCES_MAPS = {
 |------|------|
 | 言語 | Python 3.11+ |
 | データ検証 | Pydantic 2.x |
-| 設定 | PyYAML |
+| 設定 | PyYAML, python-dotenv |
 | LLM | OpenAI API |
 | 非同期 | asyncio, uvicorn |
 | 分散 | Ray 2.49.2（distributed版のみ） |
@@ -162,3 +167,4 @@ RESOURCES_MAPS = {
 - コンフィグ追加時は `types/configs/` にPydanticモデルを定義する
 - standaloneとdistributedでコア構造は共通。distributed固有コードは `mas/pod/` に配置
 - 環境変数 `MAS_PROJECT_ABS_PATH` と `MAS_PROJECT_REL_PATH` はシミュレーション実行時に必要
+- APIキーは `.env` ファイルまたは環境変数 `OPENAI_API_KEY` で管理し、YAMLに直接記載しないことを推奨

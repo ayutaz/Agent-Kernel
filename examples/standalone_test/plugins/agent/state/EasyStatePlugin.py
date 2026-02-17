@@ -19,4 +19,7 @@ class EasyStatePlugin(StatePlugin):
         logger.info(f'Agent {self.agent_id} have the same state as yesterday.')
     
     async def set_state(self, key: str, value: Any):
-        pass
+        self._state_data[key] = value
+
+    async def get_state(self, key: str) -> Any:
+        return self._state_data.get(key)

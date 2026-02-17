@@ -5,6 +5,9 @@ import os
 import asyncio
 import yaml
 import time
+from dotenv import load_dotenv
+
+load_dotenv()
 
 project_path = os.path.dirname(os.path.abspath(__file__))
 
