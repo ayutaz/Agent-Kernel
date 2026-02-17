@@ -172,13 +172,31 @@ Agent-Kernel 框架采用模块化微内核架构，包含一个由 **Agent**、
 
 ### 1. 环境要求
 
-- `Python ≥ 3.11`
+- `Python ≥ 3.11, < 3.13`
+- [uv](https://docs.astral.sh/uv/)（開発時推奨）
 
 ### 2. 安装
 
+#### 开发者（从源码）
+
+```bash
+# uv をインストール（未インストールの場合）
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# クローンしてセットアップ
+git clone https://github.com/ZJU-LLMs/Agent-Kernel.git
+cd Agent-Kernel
+uv sync --all-extras    # .venv 自动创建，安装所有依赖
+```
+
+#### 终端用户（从 PyPI）
+
 您可以根据需求选择**单机版**或**分布式版**。
 
-#### Agent-Kernel 单机版
+**Agent-Kernel 单机版**
 
 ```bash
 pip install agentkernel-standalone
@@ -186,7 +204,7 @@ pip install agentkernel-standalone
 
 👉 详细使用方法和示例请参阅 [单机版 README](examples/standalone_test/README.md)。
 
-#### Agent-Kernel 分布式版本
+**Agent-Kernel 分布式版本**
 
 ```bash
 pip install agentkernel-distributed

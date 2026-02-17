@@ -15,9 +15,16 @@
 
 ### 1. Requirements
 
-- Python ≥ 3.11
+- Python ≥ 3.11, < 3.13
 
-### 2. Install from PyPI
+### 2. For Developers (from source)
+
+```bash
+# From the repository root
+uv sync --all-extras
+```
+
+### 3. Install from PyPI
 
 You can install Agent-Kernel Standalone directly from PyPI using `pip`.
 

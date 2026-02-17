@@ -179,13 +179,31 @@ To realize the core design goals of the Agent-Kernel framework, we made a series
 
 ### 1. Requirements
 
-- `Python ≥ 3.11`
+- `Python ≥ 3.11, < 3.13`
+- [uv](https://docs.astral.sh/uv/) (recommended for development)
 
 ### 2. Installation
 
+#### For Developers (from source)
+
+```bash
+# Install uv (if not already installed)
+# macOS/Linux
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Windows
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+
+# Clone and set up
+git clone https://github.com/ZJU-LLMs/Agent-Kernel.git
+cd Agent-Kernel
+uv sync --all-extras    # Creates .venv and installs all dependencies
+```
+
+#### For End Users (from PyPI)
+
 You can choose either **standalone** or **distributed** package based on your needs.
 
-#### Agent-Kernel Standalone
+**Agent-Kernel Standalone**
 
 ```bash
 pip install agentkernel-standalone
@@ -193,7 +211,7 @@ pip install agentkernel-standalone
 
 👉 For detailed usage and examples, see the [Standalone README](examples/standalone_test/README.md).
 
-#### Agent-Kernel Distributed
+**Agent-Kernel Distributed**
 
 ```bash
 pip install agentkernel-distributed

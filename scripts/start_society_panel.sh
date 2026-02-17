@@ -16,7 +16,7 @@
 #   ./start_society_panel.sh
 #
 # Requirements:
-#   - Python 3.11 or higher
+#   - uv (https://docs.astral.sh/uv/)
 #   - Node.js and npm
 #   - Internet connection (for package installation)
 #

@@ -16,13 +16,14 @@ To simplify the process, we have provided basic implementations for five core pl
 
 2. Install the required dependencies:
     ```bash
-    pip install "agentkernel-distributed[all]"
+    # From the repository root
+    uv sync --all-extras
     ```
-    
+
 3. Run
     ```bash
     cd Agent-Kernel
-    python -m examples.distributed_test.run_simulation
+    uv run python -m examples.distributed_test.run_simulation
     ```
         
             

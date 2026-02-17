@@ -160,8 +160,7 @@ society-panel/
 │   │   ├── api/            # API endpoints
 │   │   ├── services/       # Business logic
 │   │   └── main.py         # Application entry
-│   ├── workspace/          # Runtime workspace
-│   └── requirements.txt
+│   └── workspace/          # Runtime workspace
 └── frontend/               # Vue 3 + Vite frontend
     ├── src/
     │   ├── components/     # UI components
@@ -177,7 +176,8 @@ society-panel/
 
 ### Prerequisites
 
-- Python 3.11+
+- Python 3.11+ (< 3.13)
+- [uv](https://docs.astral.sh/uv/)
 - Node.js 18+
 - npm or pnpm
 
@@ -194,7 +194,7 @@ scripts\start_society_panel.bat
 ```
 
 The script will automatically:
-1. Create Python virtual environment and install dependencies
+1. Sync Python dependencies via `uv sync`
 2. Install npm packages for the frontend
 3. Start both backend (port 8001) and frontend (port 5174) services
 
