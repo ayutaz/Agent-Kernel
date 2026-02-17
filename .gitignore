@@ -20,8 +20,10 @@ build/
 *.db
 *.egg-info/
 data-test/
-*-lock.json
-*.lock
+# Lock files (uv.lock は追跡するため個別指定)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 decoupling_output
 workspace
 tests/

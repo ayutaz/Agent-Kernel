@@ -1,0 +1,30 @@
+[project]
+name = "agentkernel-workspace"
+version = "0.0.0"
+description = "Agent-Kernel monorepo workspace"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "agentkernel-standalone",
+    "agentkernel-distributed",
+]
+
+[tool.uv]
+managed = true
+
+[tool.uv.sources]
+agentkernel-standalone = { workspace = true }
+agentkernel-distributed = { workspace = true }
+
+[tool.uv.workspace]
+members = [
+    "packages/agentkernel-standalone",
+    "packages/agentkernel-distributed",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.8",
+]
+panel = [
+    "python-multipart",
+]

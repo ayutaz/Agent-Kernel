@@ -45,14 +45,6 @@ readonly FRONTEND_DIR="society-panel/frontend"
 readonly BACKEND_PORT=8001
 readonly FRONTEND_PORT=5174
 
-# Python Version Requirements
-readonly REQUIRED_PYTHON_MAJOR=3
-readonly REQUIRED_PYTHON_MINOR=11
-
-# PyPI Mirror Configuration (Chinese mirror for faster downloads)
-readonly PIP_INDEX_URL="https://mirrors.aliyun.com/pypi/simple/"
-readonly PIP_TRUSTED_HOST="mirrors.aliyun.com"
-
 # Terminal Color Codes
 readonly GREEN='\033[0;32m'
 readonly YELLOW='\033[1;33m'
@@ -84,29 +76,6 @@ print_warn() { echo -e "${YELLOW}[WARN]${NC} $1"; }
 # @param $1 Message to print
 ##
 print_error() { echo -e "${RED}[ERROR]${NC} $1"; }
-
-##
-# @brief Find a suitable Python interpreter (>= 3.11)
-# @return Echoes the Python command name if found, returns 1 if not found
-##
-find_python() {
-    local candidates=("python3.11" "python3.12" "python3")
-    for cmd in "${candidates[@]}"; do
-        if command -v "$cmd" &> /dev/null; then
-            local version_output
-            version_output=$("$cmd" --version 2>&1)
-            local major minor
-            major=$(echo "$version_output" | sed -E 's/Python ([0-9]+)\..*/\1/')
-            minor=$(echo "$version_output" | sed -E 's/Python [0-9]+\.([0-9]+).*/\1/')
-            # Added check: "$minor" -lt 13 to exclude Python 3.13
-            if [[ "$major" -ge "$REQUIRED_PYTHON_MAJOR" && "$minor" -ge "$REQUIRED_PYTHON_MINOR" && "$minor" -lt 13 ]]; then
-                echo "$cmd"
-                return 0
-            fi
-        fi
-    done
-    return 1
-}
 
 ##
 # @brief Gracefully shutdown all services and cleanup resources
@@ -187,46 +156,19 @@ print_info "Workspace and logs cleanup finished."
 print_info "Preparing backend service..."
 cd "$BACKEND_DIR" || { print_error "Backend directory not found: $BACKEND_DIR"; exit 1; }
 
-# Find and validate Python version
-PYTHON_CMD=$(find_python) || {
-    print_error "Python ${REQUIRED_PYTHON_MAJOR}.${REQUIRED_PYTHON_MINOR}+ is required but not found!"
-    print_error "Please install Python 3.11 or higher:"
-    print_error "  macOS: brew install python@3.12"
-    print_error "  Ubuntu: sudo apt install python3.12"
+# Check uv availability
+if ! command -v uv &> /dev/null; then
+    print_error "uv is not installed. Install: curl -LsSf https://astral.sh/uv/install.sh | sh"
     exit 1
-}
-print_info "Using Python: $PYTHON_CMD ($($PYTHON_CMD --version))"
-
-# Create or activate virtual environment
-if [ ! -d ".venv" ]; then
-    print_warn "Backend virtual environment not found. Creating with $PYTHON_CMD..."
-    "$PYTHON_CMD" -m venv .venv
-    source .venv/bin/activate
-    # Install certifi first to fix SSL certificate issues on macOS
-    print_info "Installing SSL certificates (certifi)..."
-    pip install --trusted-host "$PIP_TRUSTED_HOST" -i "$PIP_INDEX_URL" certifi
-else
-    source .venv/bin/activate
 fi
 
-# Configure SSL certificate path if certifi is installed
-CERTIFI_PATH=$(python3 -c "import certifi; print(certifi.where())" 2>/dev/null) || true
-if [[ -n "$CERTIFI_PATH" ]]; then
-    export SSL_CERT_FILE="$CERTIFI_PATH"
-    export REQUESTS_CA_BUNDLE="$CERTIFI_PATH"
-fi
-
-# Install/update backend dependencies
-if [ ! -f ".venv/pip_installed_reqs" ] || ! cmp -s "requirements.txt" ".venv/pip_installed_reqs"; then
-    print_info "Upgrading pip to latest version..."
-    pip install --trusted-host "$PIP_TRUSTED_HOST" -i "$PIP_INDEX_URL" --upgrade pip
-    print_info "Backend dependencies need to be installed/updated. Running pip install..."
-    pip install --trusted-host "$PIP_TRUSTED_HOST" -i "$PIP_INDEX_URL" -r requirements.txt && cp requirements.txt .venv/pip_installed_reqs
-fi
+# Sync dependencies from workspace lockfile
+print_info "Syncing dependencies with uv..."
+uv sync --project "$ROOT_DIR" --all-extras --group panel
 
 # Launch backend server
 print_info "Starting FastAPI backend in the background (Port: $BACKEND_PORT)..."
-uvicorn app.main:app --reload --host 0.0.0.0 --port "$BACKEND_PORT" &
+uv run --project "$ROOT_DIR" uvicorn app.main:app --reload --host 0.0.0.0 --port "$BACKEND_PORT" &
 BACKEND_PID=$!
 cd - > /dev/null
 

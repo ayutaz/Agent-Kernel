@@ -39,14 +39,6 @@ set "FRONTEND_DIR=society-panel\frontend"
 set "BACKEND_PORT=8001"
 set "FRONTEND_PORT=5174"
 
-:: Python Version Requirements
-set "REQUIRED_PYTHON_MAJOR=3"
-set "REQUIRED_PYTHON_MINOR=11"
-
-:: PyPI Mirror Configuration (Chinese mirror for faster downloads)
-set "PIP_INDEX_URL=https://mirrors.aliyun.com/pypi/simple/"
-set "PIP_TRUSTED_HOST=mirrors.aliyun.com"
-
 :: ==============================================================================
 :: Utility Subroutines
 :: ==============================================================================
@@ -75,32 +67,6 @@ GOTO :main
 :: ------------------------------------------------------------------------------
 :print_error
     echo [ERROR] %~1
-    GOTO :EOF
-
-:: ------------------------------------------------------------------------------
-:: @brief Find a suitable Python interpreter (>= 3.11)
-:: @return Sets PYTHON_CMD variable if found, empty if not found
-:: ------------------------------------------------------------------------------
-:find_python
-    for %%P in (python3.11 python3.12 python py) do (
-        where %%P >NUL 2>&1
-        if !ERRORLEVEL! EQU 0 (
-            for /f "tokens=2 delims= " %%V in ('%%P --version 2^>^&1') do (
-                for /f "tokens=1,2 delims=." %%A in ("%%V") do (
-                    if %%A GEQ %REQUIRED_PYTHON_MAJOR% (
-                        if %%B GEQ %REQUIRED_PYTHON_MINOR% (
-                            :: Added check: LSS 13 to exclude Python 3.13
-                            if %%B LSS 13 (
-                                set "PYTHON_CMD=%%P"
-                                GOTO :EOF
-                            )
-                        )
-                    )
-                )
-            )
-        )
-    )
-    set "PYTHON_CMD="
     GOTO :EOF
 
 :: ------------------------------------------------------------------------------
@@ -198,48 +164,21 @@ if not exist "%BACKEND_DIR%" (
 
 pushd "%BACKEND_DIR%"
 
-:: Find and validate Python version
-CALL :find_python
-if "%PYTHON_CMD%"=="" (
-    CALL :print_error "Python %REQUIRED_PYTHON_MAJOR%.%REQUIRED_PYTHON_MINOR%+ is required but not found!"
-    CALL :print_error "Please install Python 3.11 or higher from https://www.python.org/downloads/"
+:: Check uv availability
+where uv >NUL 2>&1
+if %ERRORLEVEL% NEQ 0 (
+    CALL :print_error "uv is not installed. Install from: https://docs.astral.sh/uv/getting-started/installation/"
     popd
     GOTO :error_exit
 )
 
-for /f "tokens=*" %%V in ('%PYTHON_CMD% --version 2^>^&1') do set "PYTHON_VERSION=%%V"
-CALL :print_info "Using Python: %PYTHON_CMD% (%PYTHON_VERSION%)"
-
-:: Create or activate virtual environment
-if not exist ".venv" (
-    CALL :print_warn "Backend virtual environment not found. Creating with %PYTHON_CMD%..."
-    %PYTHON_CMD% -m venv .venv
-    if !ERRORLEVEL! NEQ 0 (
-        CALL :print_error "Failed to create virtual environment."
-        popd
-        GOTO :error_exit
-    )
-    CALL ".venv\Scripts\activate.bat"
-    CALL :print_info "Installing SSL certificates (certifi)..."
-    pip install --trusted-host %PIP_TRUSTED_HOST% -i %PIP_INDEX_URL% certifi
-) else (
-    CALL ".venv\Scripts\activate.bat"
-)
-
-:: Install/update backend dependencies
-if not exist ".venv\pip_installed_reqs" (
-    CALL :print_info "Upgrading pip to latest version..."
-    pip install --trusted-host %PIP_TRUSTED_HOST% -i %PIP_INDEX_URL% --upgrade pip
-    CALL :print_info "Backend dependencies need to be installed/updated. Running pip install..."
-    pip install --trusted-host %PIP_TRUSTED_HOST% -i %PIP_INDEX_URL% -r requirements.txt
-    if !ERRORLEVEL! EQU 0 (
-        copy requirements.txt .venv\pip_installed_reqs >NUL
-    )
-)
+:: Sync dependencies
+CALL :print_info "Syncing dependencies with uv..."
+uv sync --project "%ROOT_DIR%" --all-extras --group panel
 
 :: Launch backend server
 CALL :print_info "Starting FastAPI backend (Port: %BACKEND_PORT%)..."
-start "Backend" cmd /c "cd /d %CD% && .venv\Scripts\activate.bat && uvicorn app.main:app --reload --host 0.0.0.0 --port %BACKEND_PORT%"
+start "Backend" cmd /c "cd /d %CD% && uv run --project "%ROOT_DIR%" uvicorn app.main:app --reload --host 0.0.0.0 --port %BACKEND_PORT%"
 
 popd
 

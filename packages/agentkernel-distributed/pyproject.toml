@@ -9,7 +9,7 @@ authors = []
 description = "A distributed multi-agent system framework"
 keywords = ["git", "llm", "agent", "ray"]
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.13"
 dependencies = [
     "colorlog>=6.9.0",
     "faker>=37.12.0",
