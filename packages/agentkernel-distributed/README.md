@@ -1,56 +1,56 @@
 <p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ZJU-LLMs/Agent-Kernel/main/assets/agentkernel_logo.png"
-    width="400"
-  />
+  <img
+    src="https://raw.githubusercontent.com/ZJU-LLMs/Agent-Kernel/main/assets/agentkernel_logo.png"
+    width="400"
+  />
 </p>
 
-# Agent-Kernel Distributed
+# Agent-Kernel 分散版
 
-**Agent-Kernel Distributed** is a distributed Multi-Agent System (MAS) development framework designed to support large-scale environments using **Ray** for distributed execution. It is ideal for coordinating multiple intelligent agents running across different nodes or processes.
+**Agent-Kernel 分散版** は、**Ray** を活用した分散実行により大規模環境をサポートする、マルチエージェントシステム（MAS）開発フレームワークです。異なるノードやプロセスにまたがる複数のインテリジェントエージェントの連携に最適です。
 
 ---
 
-## 🚀 Quick Start
+## 🚀 クイックスタート
 
-### 1. Requirements
+### 1. 動作要件
 
 - `Python ≥ 3.11, < 3.13`
 
-### 2. For Developers (from source)
+### 2. 開発者向け（ソースから）
 
 ```bash
-# From the repository root
+# リポジトリルートから実行
 uv sync --all-extras
 ```
 
-### 3. Install from PyPI
+### 3. PyPI からインストール
 
-You can install Agent-Kernel Distributed directly from PyPI using `pip`.
+`pip` を使って Agent-Kernel 分散版を直接インストールできます。
 
 ```bash
 pip install agentkernel-distributed
 ```
 
-> The distributed package depends on Ray and will install it automatically.
+> 分散版パッケージは Ray に依存しており、自動的にインストールされます。
 
-**Installing with Optional Features**
+**オプション機能のインストール**
 
-Agent-Kernel Distributed comes with optional dependencies for web services and storage solutions. You can install them as needed.
+Agent-Kernel 分散版は、Web サービスやストレージソリューション向けのオプション依存関係をサポートしています。必要に応じてインストールできます。
 
-- `web` → Installs `aiohttp`, `fastapi`, `uvicorn`
-- `storages` → Installs `asyncpg`, `pymilvus`, `redis`
-- `all` → Installs both `web` and `storages`
+- `web` → `aiohttp`, `fastapi`, `uvicorn` をインストール
+- `storages` → `asyncpg`, `pymilvus`, `redis` をインストール
+- `all` → `web` と `storages` の両方をインストール
 
-To install the package with these extras, use the following format:
+以下の形式でオプションを指定してインストールします:
 
 ```bash
-# Install with web features
+# Web 機能付きでインストール
 pip install "agentkernel-distributed[web]"
 
-# Install with storage features
+# ストレージ機能付きでインストール
 pip install "agentkernel-distributed[storages]"
 
-# Install all optional features
+# 全オプション機能付きでインストール
 pip install "agentkernel-distributed[all]"
 ```

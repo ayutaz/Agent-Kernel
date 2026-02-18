@@ -41,13 +41,6 @@
 <br>
 
 <div align="center">
-
-[English](README.md) •
-[简体中文](README_zh.md)
-
-</div>
-
-<div align="center">
   <i>感谢您的支持！为 Agent-Kernel 点亮一颗 🌟 Star，帮助我们不断成长和完善！</i>
 </div>
 
@@ -77,7 +70,7 @@ Agent-Kernel 已成功应用于多个复杂的社会模拟场景：
 
 ### 1. 25 号宇宙
 
-模拟著名的“25 号宇宙”社会学实验，以探索人口密度、社会结构与行为异常之间的关系。
+模拟著名的"25 号宇宙"社会学实验，以探索人口密度、社会结构与行为异常之间的关系。
 
 <div align="center">
   <a href="https://www.bilibili.com/video/BV1dz2DBDERB/" target="_blank">
@@ -173,23 +166,23 @@ Agent-Kernel 框架采用模块化微内核架构，包含一个由 **Agent**、
 ### 1. 环境要求
 
 - `Python ≥ 3.11, < 3.13`
-- [uv](https://docs.astral.sh/uv/)（開発時推奨）
+- [uv](https://docs.astral.sh/uv/)（开发时推荐）
 
 ### 2. 安装
 
 #### 开发者（从源码）
 
 ```bash
-# uv をインストール（未インストールの場合）
+# 安装 uv（如尚未安装）
 # macOS/Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Windows
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-# クローンしてセットアップ
+# 克隆并设置
 git clone https://github.com/ZJU-LLMs/Agent-Kernel.git
 cd Agent-Kernel
-uv sync --all-extras    # .venv 自动创建，安装所有依赖
+uv sync --all-extras    # 自动创建 .venv 并安装所有依赖
 ```
 
 #### 终端用户（从 PyPI）

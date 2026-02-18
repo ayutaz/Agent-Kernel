@@ -1,7 +1,7 @@
 <div align="center">
  <img
   src="assets/agentkernel_cover.png"
-  alt="Agent-Kernel Logo"
+  alt="Agent-Kernel ロゴ"
   width="800"
  />
 </div>
@@ -47,249 +47,242 @@
 <br>
 
 <div align="center">
-
-[English](README.md) •
-[简体中文](README_zh.md)
-
-</div>
-
-<div align="center">
-  <i>We appreciate your support! Help us grow and improve by giving Agent-Kernel a 🌟 star on GitHub!</i>
+  <i>Agent-Kernel に GitHub で 🌟 Star をつけて応援してください！</i>
 </div>
 
 ---
 
-# Explore the Scaling Law of Collective Intelligence
+# 集合知のスケーリング則を探求する
 
-**Agent-Kernel** is a user-friendly multi-agent system development framework, which is designed to powerfully enable **large-scale** social simulation. This offers the opportunity to **Explore the Scaling Law of Collective Intelligence**.
+**Agent-Kernel** は、**大規模**社会シミュレーションを強力に実現する、ユーザーフレンドリーなマルチエージェントシステム開発フレームワークです。**集合知のスケーリング則の探求**に新たな可能性を提供します。
 
-## ✨ Highlights
+## ✨ 特長
 
-Agent-Kernel supports:
+Agent-Kernel は以下をサポートします:
 
-- **dynamic addition and removal of LLMs-based agents at runtime**;
+- **LLMベースのエージェントを実行時に動的に追加・削除**;
 
-- **unlimited scalability of agents**;
+- **エージェント数の無制限スケーリング**;
 
-- **real-time intervention during the simulation process**;
+- **シミュレーション実行中のリアルタイム介入**;
 
-- **trustworthy verification of agent behaviors and large model outputs**;
+- **エージェントの行動と大規模言語モデル出力の信頼性検証**;
 
-- **code reuse across different simulation scenarios**.
+- **異なるシミュレーションシナリオ間でのコード再利用**。
 
-## 🎬 Showcase
+## 🎬 活用事例
 
-Agent-Kernel has been successfully applied to several complex social simulation scenarios:
+Agent-Kernel は複数の複雑な社会シミュレーションシナリオに適用されています:
 
-### 1. Universe 25 Experiment
+### 1. Universe 25 実験
 
-Simulating the famous "Universe 25" sociological experiment to explore the relationships between population density, social structure, and behavioral anomalies.
+有名な「Universe 25」社会学実験をシミュレーションし、人口密度・社会構造・行動異常の関係を探求します。
 
 <div align="center">
   <a href="https://www.bilibili.com/video/BV1dz2DBDERB/" target="_blank">
-    <img src="assets/rat.jpg" alt="Universe 25 Experiment" width="700"/>
+    <img src="assets/rat.jpg" alt="Universe 25 実験" width="700"/>
   </a>
 </div>
 
 <!--
 <div align="center">
-  <img src="assets/rat.jpg" alt="Universe 25 Experiment" width="700"/>
+  <img src="assets/rat.jpg" alt="Universe 25 実験" width="700"/>
 </div> -->
 
-### 2. ZJU Campus Life
+### 2. 浙江大学キャンパスライフ
 
-Constructing a high-fidelity simulation of the campus environment to study pedestrian flow dynamics, resource allocation, and social interaction patterns.
+高精度なキャンパス環境シミュレーションを構築し、歩行者の流動パターン、リソース配分、社会的インタラクションを研究します。
 
 <div align="center">
   <a href="https://www.bilibili.com/video/BV1xamQBuEgS/" target="_blank">
-    <img src="assets/zju.png" alt="ZJU Campus Life" width="700"/>
+    <img src="assets/zju.png" alt="浙江大学キャンパスライフ" width="700"/>
   </a>
 </div>
 
 <!-- <div align="center">
- <img src="assets/zju.png" alt="ZJU Campus Life" width="700"/>
+ <img src="assets/zju.png" alt="浙江大学キャンパスライフ" width="700"/>
 </div> -->
 
-## 📍 Table of Contents
+## 📍 目次
 
-- [✨ Highlights](#-highlights)
-- [🎬 Showcase](#-showcase)
-  - [Universe 25 Experiment](#1-universe-25-experiment)
-  - [ZJU Campus Life](#2-zju-campus-life)
-- [🎯 Core Advantages: Why Choose Agent-Kernel?](#-core-advantages-why-choose-agent-kernel)
-  - [Adaptability](#1-adaptability)
-  - [Configurability](#2-configurability)
-  - [Reliability](#3-reliability)
-  - [Reusability](#4-reusability)
-- [🏛️ Architecture and Design](#️-architecture-and-design)
-  - [Framework Overview](#1-framework-overview)
-  - [Software Design](#2-software-design)
-- [🚀 Quick Start](#-quick-start)
-  - [Requirements](#1-requirements)
-  - [Installation](#2-installation)
-  - [(Optional) Start Society-Panel](#3-optional-start-society-panel)
-- [📂 Project Structure](#-project-structure)
-- [🎓 Citation](#-citation)
-- [🤝 Contributors](#-contributors)
-- [📜 License](#-license)
+- [✨ 特長](#-特長)
+- [🎬 活用事例](#-活用事例)
+  - [Universe 25 実験](#1-universe-25-実験)
+  - [浙江大学キャンパスライフ](#2-浙江大学キャンパスライフ)
+- [🎯 コア優位性：なぜ Agent-Kernel を選ぶのか？](#-コア優位性なぜ-agent-kernel-を選ぶのか)
+  - [適応性](#1-適応性)
+  - [設定可能性](#2-設定可能性)
+  - [信頼性](#3-信頼性)
+  - [再利用性](#4-再利用性)
+- [🏛️ アーキテクチャと設計](#️-アーキテクチャと設計)
+  - [フレームワーク概要](#1-フレームワーク概要)
+  - [ソフトウェア設計](#2-ソフトウェア設計)
+- [🚀 クイックスタート](#-クイックスタート)
+  - [動作要件](#1-動作要件)
+  - [インストール](#2-インストール)
+  - [（オプション）Society-Panel の起動](#3-オプションsociety-panel-の起動)
+- [📂 プロジェクト構成](#-プロジェクト構成)
+- [🎓 引用](#-引用)
+- [🤝 コントリビューター](#-コントリビューター)
+- [📜 ライセンス](#-ライセンス)
 
-## 🎯 Core Advantages: Why Choose Agent-Kernel?
+## 🎯 コア優位性：なぜ Agent-Kernel を選ぶのか？
 
-Agent-Kernel offers four core advantages for social simulation, making it stand out in the study of multi-agent systems:
+Agent-Kernel は社会シミュレーションのための4つのコア優位性を提供し、マルチエージェントシステム研究において際立った存在です:
 
-### 1. Adaptability
+### 1. 適応性
 
-Agent-Kernel supports adding/removing agents, changing environments, and modifying behaviors at runtime. This enables simulations to naturally reflect population flow, environmental shifts, and evolving behavioral patterns.
+Agent-Kernel は実行時にエージェントの追加・削除、環境の変更、行動の修正をサポートします。これにより、人口流動、環境変化、行動パターンの進化を自然に反映するシミュレーションが可能になります。
 
-### 2. Configurability
+### 2. 設定可能性
 
-With the Controller module, Agent-Kernel allows real-time adjustments to parameters or events during simulation. This makes it easy to test and validate complex sociological hypotheses.
+Controller モジュールにより、シミュレーション実行中にパラメータやイベントをリアルタイムに調整できます。これにより、複雑な社会学的仮説の検証が容易になります。
 
-### 3. Reliability
+### 3. 信頼性
 
-Agent-Kernel employs a strict system-level verification mechanism, validating every agent action. This ensures that simulation behaviors follow physical and social rules, maintaining scientific rigor.
+Agent-Kernel は厳格なシステムレベルの検証メカニズムを採用し、すべてのエージェント行動を検証します。これにより、シミュレーション行動が物理的・社会的ルールに従うことを保証し、科学的厳密性を維持します。
 
-### 4. Reusability
+### 4. 再利用性
 
-Agent-Kernel uses a standardized, plugin-based modular design. Codes can be reused across scenarios, significantly accelerating research iteration.
+Agent-Kernel は標準化されたプラグインベースのモジュール設計を採用しています。コードはシナリオを跨いで再利用でき、研究の反復速度を大幅に向上させます。
 
-## 🏛️ Architecture and Design
+## 🏛️ アーキテクチャと設計
 
-### 1. Framework Overview
+### 1. フレームワーク概要
 
-The Agent-Kernel framework adopts a modular microkernel architecture, with a core system—composed of the **Agent**, **Environment**, **Action**, **Controller**, and **System** modules—and multiple plugins. The core manages plugin registration, behavior verification, asynchronous communication, and other core responsibilities, while plugins provide the specialized functions for social simulation, as shown in the diagram below:
-
-<p align="center">
-
-<img src="assets/framework.png" alt="Agent-Kernel Framework" width="700"/>
-
-</p>
-
-### 2. Software Design
-
-To realize the core design goals of the Agent-Kernel framework, we made a series of deliberate software design decisions, as illustrated in the diagram below:
+Agent-Kernel フレームワークはモジュラーマイクロカーネルアーキテクチャを採用しています。**Agent**、**Environment**、**Action**、**Controller**、**System** モジュールで構成されるコアシステムと、複数のプラグインで成り立っています。コアはプラグイン登録、行動検証、非同期通信などの中核的な責務を管理し、プラグインが社会シミュレーションに必要な専門機能を提供します。以下の図をご覧ください:
 
 <p align="center">
 
-<img src="assets/softwaredesign.png" alt="Agent-Kernel Software Design" width="700"/>
+<img src="assets/framework.png" alt="Agent-Kernel フレームワーク" width="700"/>
 
 </p>
 
-## 🚀 Quick Start
+### 2. ソフトウェア設計
 
-### 1. Requirements
+Agent-Kernel フレームワークのコア設計目標を実現するため、以下の図に示す一連のソフトウェア設計を行いました:
+
+<p align="center">
+
+<img src="assets/softwaredesign.png" alt="Agent-Kernel ソフトウェア設計" width="700"/>
+
+</p>
+
+## 🚀 クイックスタート
+
+### 1. 動作要件
 
 - `Python ≥ 3.11, < 3.13`
-- [uv](https://docs.astral.sh/uv/) (recommended for development)
+- [uv](https://docs.astral.sh/uv/)（開発時推奨）
 
-### 2. Installation
+### 2. インストール
 
-#### For Developers (from source)
+#### 開発者向け（ソースから）
 
 ```bash
-# Install uv (if not already installed)
+# uv をインストール（未インストールの場合）
 # macOS/Linux
 curl -LsSf https://astral.sh/uv/install.sh | sh
 # Windows
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
-# Clone and set up
+# クローンしてセットアップ
 git clone https://github.com/ZJU-LLMs/Agent-Kernel.git
 cd Agent-Kernel
-uv sync --all-extras    # Creates .venv and installs all dependencies
+uv sync --all-extras    # .venv を自動作成し、全依存関係をインストール
 ```
 
-#### For End Users (from PyPI)
+#### エンドユーザー向け（PyPI から）
 
-You can choose either **standalone** or **distributed** package based on your needs.
+用途に応じて **スタンドアロン版** または **分散版** を選択できます。
 
-**Agent-Kernel Standalone**
+**Agent-Kernel スタンドアロン版**
 
 ```bash
 pip install agentkernel-standalone
 ```
 
-👉 For detailed usage and examples, see the [Standalone README](examples/standalone_test/README.md).
+👉 詳しい使い方と例は [スタンドアロン版 README](examples/standalone_test/README.md) をご覧ください。
 
-**Agent-Kernel Distributed**
+**Agent-Kernel 分散版**
 
 ```bash
 pip install agentkernel-distributed
 ```
 
-> Note: The distributed package depends on **Ray** and will install it automatically.
+> 注: 分散版パッケージは **Ray** に依存しており、自動的にインストールされます。
 
-👉 For detailed usage and examples, see the [Distributed README](examples/distributed_test/README.md).
+👉 詳しい使い方と例は [分散版 README](examples/distributed_test/README.md) をご覧ください。
 
-#### Installing with Optional Features
+#### オプション機能のインストール
 
-Both `agentkernel-standalone` and `agentkernel-distributed` support optional dependencies for web services and storage solutions. You can install them as needed.
+`agentkernel-standalone` と `agentkernel-distributed` の両方で、Web サービスやストレージソリューション向けのオプション依存関係をサポートしています。必要に応じてインストールできます。
 
-- `web` → Installs `aiohttp`, `fastapi`, `uvicorn`
-- `storages` → Installs `asyncpg`, `pymilvus`, `redis`
-- `all` → Installs both `web` and `storages`
+- `web` → `aiohttp`, `fastapi`, `uvicorn` をインストール
+- `storages` → `asyncpg`, `pymilvus`, `redis` をインストール
+- `all` → `web` と `storages` の両方をインストール
 
-To install a package with these extras, use square brackets `[]`. For example:
+これらのオプションをインストールするには、角括弧 `[]` を使用します。例:
 
 ```bash
-# Install the standalone package with web features
+# スタンドアロン版に Web 機能を追加
 pip install "agentkernel-standalone[web]"
 
-# Install the distributed package with storage features
+# 分散版にストレージ機能を追加
 pip install "agentkernel-distributed[storages]"
 
-# Install the distributed package with all optional features
+# 分散版に全オプション機能を追加
 pip install "agentkernel-distributed[all]"
 ```
 
-### 3. (Optional) Start Society-Panel
+### 3. （オプション）Society-Panel の起動
 
-Society-Panel is a web-based control panel to help you configure, deploy, and monitor your simulations visually.
+Society-Panel は、シミュレーションの設定・デプロイ・監視を視覚的に行える Web ベースのコントロールパネルです。
 
-1.  **Launch the panel:**
-    Use the provided startup scripts to launch the entire application stack (backend + UI). **These scripts will automatically check for and install all required dependencies, so no manual environment setup is needed.**
+1.  **パネルを起動:**
+    提供されているスタートアップスクリプトを使用して、アプリケーションスタック全体（バックエンド + UI）を起動します。**スクリプトが必要な依存関係を自動的にチェック・インストールするため、手動での環境構築は不要です。**
 
-    - **On Linux/macOS:**
+    - **Linux/macOS:**
 
       ```bash
-      # Grant execution permission (first time only)
+      # 実行権限を付与（初回のみ）
       chmod +x scripts/start_society_panel.sh
       ./scripts/start_society_panel.sh
       ```
 
-    - **On Windows:**
+    - **Windows:**
       ```bash
       scripts\start_society_panel.bat
       ```
 
-2.  **Access the UI:**
-    Once the script confirms that the services are running, open your browser and navigate to:
+2.  **UI にアクセス:**
+    スクリプトがサービスの起動を確認したら、ブラウザで以下にアクセスします:
     **`http://localhost:5174`**
 
-From the panel, you can upload custom code packages, edit configuration files through a graphical interface, and control the simulation lifecycle. To shut down the panel and all related services, simply press `Ctrl+C` in the terminal where you ran the script.
+パネルから、カスタムコードパッケージのアップロード、グラフィカルインターフェースでの設定ファイル編集、シミュレーションライフサイクルの制御が可能です。パネルと関連サービスをすべてシャットダウンするには、スクリプトを実行したターミナルで `Ctrl+C` を押してください。
 
-## 📂 Project Structure
+## 📂 プロジェクト構成
 
 ```
 MAS/
 ├── packages/
-│   ├── agentkernel-distributed/   # Distributed version (installs Ray automatically)
-│   └── agentkernel-standalone/    # Local single-machine version
+│   ├── agentkernel-distributed/   # 分散版（Ray を自動インストール）
+│   └── agentkernel-standalone/    # ローカル単一マシン版
 │
 ├── examples/
-│   ├── distributed_test/          # Example for the distributed version (Ray)
-│   └── standalone_test/           # Example for the local standalone version
+│   ├── distributed_test/          # 分散版（Ray）の実行例
+│   └── standalone_test/           # ローカルスタンドアロン版の実行例
 │
 ├── society-panel/
-│   ├── backend/                   # FastAPI backend service
-│   └── frontend/                  # Vue 3 + Vite frontend
+│   ├── backend/                   # FastAPI バックエンドサービス
+│   └── frontend/                  # Vue 3 + Vite フロントエンド
 │
 └── README.md
 ```
 
-## 🎓 Citation
+## 🎓 引用
 
-If you use Agent-Kernel in your research, please consider citing our paper:
+Agent-Kernel を研究で使用された場合は、以下の論文の引用をご検討ください:
 
 ```
 @misc{mao2025agentkernelmicrokernelmultiagentframework,
@@ -303,16 +296,16 @@ If you use Agent-Kernel in your research, please consider citing our paper:
 }
 ```
 
-## 🤝 Contributors
+## 🤝 コントリビューター
 
-Thanks to all the developers who have contributed to Agent-Kernel:
+Agent-Kernel に貢献してくださったすべての開発者に感謝します:
 
 <a href="https://github.com/ZJU-LLMs/Agent-Kernel/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=ZJU-LLMs/Agent-Kernel&v=1" width=400 />
 </a>
 
-_We also welcome you to become one of our contributors via Pull Requests!_
+_Pull Request を通じてコントリビューターになることを歓迎します！_
 
-## 📜 License
+## 📜 ライセンス
 
-This project is licensed under the Apache 2.0.
+本プロジェクトは Apache 2.0 ライセンスの下で公開されています。

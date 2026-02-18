@@ -1,96 +1,96 @@
 # Society Panel
 
-A unified visual control panel for Multi-Agent System (MAS) simulations. Society Panel integrates simulation management, file operations, and configuration editing into a single web-based interface, enabling researchers and developers to build, deploy, and monitor agent societies with ease.
+マルチエージェントシステム（MAS）シミュレーション向けの統合ビジュアルコントロールパネルです。Society Panel は、シミュレーション管理・ファイル操作・設定編集を単一の Web ベースインターフェースに統合し、研究者や開発者がエージェント社会を容易に構築・デプロイ・監視できるようにします。
 
-> ⚠️ **Note**: Society Panel currently only supports the **distributed version** (`agentkernel-distributed`). 
+> ⚠️ **注意**: Society Panel は現在 **分散版** (`agentkernel-distributed`) のみをサポートしています。
 
 ---
 
-## 📑 Table of Contents
+## 📑 目次
 
-- [✨ Feature Overview](#-feature-overview)
-  - [One-Click Simulation Launch](#one-click-simulation-launch)
-  - [Global Command Console](#global-command-console)
-  - [Event Stream Visualization](#event-stream-visualization)
-- [🖥️ Interface Introduction](#️-interface-introduction)
-  - [Dashboard](#dashboard)
-  - [File Management](#file-management)
-  - [Configuration Center](#configuration-center)
-- [🚀 Quick Start](#-quick-start)
-  - [Step 1: Prepare Your Simulation Assets](#step-1-prepare-your-simulation-assets)
-  - [Step 2: Upload Files](#step-2-upload-files)
-  - [Step 3: Verify Configuration](#step-3-verify-configuration)
-  - [Step 4: Start Simulation](#step-4-start-simulation)
-  - [Step 5: Interact & Observe](#step-5-interact--observe)
+- [✨ 機能概要](#-機能概要)
+  - [ワンクリックシミュレーション起動](#ワンクリックシミュレーション起動)
+  - [グローバルコマンドコンソール](#グローバルコマンドコンソール)
+  - [イベントストリーム可視化](#イベントストリーム可視化)
+- [🖥️ インターフェース紹介](#️-インターフェース紹介)
+  - [ダッシュボード](#ダッシュボード)
+  - [ファイル管理](#ファイル管理)
+  - [設定センター](#設定センター)
+- [🚀 クイックスタート](#-クイックスタート)
+  - [ステップ 1: シミュレーションアセットの準備](#ステップ-1-シミュレーションアセットの準備)
+  - [ステップ 2: ファイルのアップロード](#ステップ-2-ファイルのアップロード)
+  - [ステップ 3: 設定の確認](#ステップ-3-設定の確認)
+  - [ステップ 4: シミュレーション開始](#ステップ-4-シミュレーション開始)
+  - [ステップ 5: 操作と観察](#ステップ-5-操作と観察)
 - [❓ FAQ](#-faq)
-- [📁 Project Structure](#-project-structure)
-- [🛠️ Development](#️-development)
-  - [Prerequisites](#prerequisites)
-  - [Running Locally](#running-locally)
-- [📄 License](#-license)
+- [📁 プロジェクト構成](#-プロジェクト構成)
+- [🛠️ 開発](#️-開発)
+  - [前提条件](#前提条件)
+  - [ローカルでの実行](#ローカルでの実行)
+- [📄 ライセンス](#-ライセンス)
 
 ---
 
-## ✨ Feature Overview
+## ✨ 機能概要
 
-### One-Click Simulation Launch
-Visually configure and launch agent society simulations with portable setup and execution.
+### ワンクリックシミュレーション起動
+ポータブルなセットアップと実行で、エージェント社会シミュレーションを視覚的に設定・起動できます。
 
-### Global Command Console
-Send commands and debug behaviors from a "God Mode" perspective to streamline strategy experiments.
+### グローバルコマンドコンソール
+「God Mode」の視点からコマンドを送信し、行動をデバッグすることで、戦略実験を効率化します。
 
-### Event Stream Visualization
-Aggregates real-time logs and key events to facilitate rapid troubleshooting of behavior and performance issues.
-
----
-
-## 🖥️ Interface Introduction
-
-The panel integrates three workspaces into a unified interface, supporting one-stop operations for building, uploading, and configuration.
-
-### Dashboard
-
-![Dashboard](assets/dashboard.png)
-
-Centralizes simulation status display, quick controls, and real-time log streams.
-
-- One-click execution of core operations like **Start / Stop / Regenerate Registry**
-- God Mode Console debugging commands take effect in real-time
-- Continuous scrolling of real-time event logs assists in tracking agent behavior
+### イベントストリーム可視化
+リアルタイムのログと重要なイベントを集約し、行動やパフォーマンスの問題を迅速にトラブルシューティングできます。
 
 ---
 
-### File Management
+## 🖥️ インターフェース紹介
 
-![File Management](assets/file_management.png)
+パネルは3つのワークスペースを統合インターフェースに集約し、構築・アップロード・設定のワンストップ操作をサポートします。
 
-Uploads the MAS-Package and datasets required for simulation with one-click import.
+### ダッシュボード
 
-- Supports upload and automatic extraction of plugin, config, and script packages
-- Datasets are uniformly stored in `workspace/data` for version management
-- Automatically generates `registry.py` after upload, eliminating manual resource imports
+![ダッシュボード](assets/dashboard.png)
 
----
+シミュレーションステータス表示、クイックコントロール、リアルタイムログストリームを一元管理します。
 
-### Configuration Center
-
-![Configuration](assets/configuration.png)
-
-Enables visual editing of YAML configurations for convenient management.
-
-- Left-side file navigation allows for quick configuration switching
-- Form-based editing prevents syntax errors
-- Auto-save functionality writes changes back to the corresponding file in `workspace/configs`
+- **開始 / 停止 / レジストリ再生成** などのコア操作をワンクリックで実行
+- God Mode コンソールのデバッグコマンドがリアルタイムで反映
+- リアルタイムイベントログの連続スクロールでエージェントの行動を追跡
 
 ---
 
-## 🚀 Quick Start
+### ファイル管理
 
-Follow the standard process from preparing assets to starting the simulation to ensure the success of your first experiment.
+![ファイル管理](assets/file_management.png)
 
-### Step 1: Prepare Your Simulation Assets
+シミュレーションに必要な MAS-Package とデータセットをワンクリックでインポートします。
 
-Package plugins, configs, and data into `MAS-Package.zip` and `Data.zip`.
+- プラグイン、設定、スクリプトパッケージのアップロードと自動展開をサポート
+- データセットは `workspace/data` に統一管理しバージョン管理が可能
+- アップロード後に `registry.py` を自動生成し、手動のリソースインポートが不要
+
+---
+
+### 設定センター
+
+![設定](assets/configuration.png)
+
+YAML 設定の視覚的な編集が可能で、便利な管理を実現します。
+
+- 左側のファイルナビゲーションで設定をすばやく切り替え
+- フォーム形式の編集で構文エラーを防止
+- 自動保存機能で `workspace/configs` 内の対応ファイルに変更を書き戻し
+
+---
+
+## 🚀 クイックスタート
+
+アセットの準備からシミュレーション開始までの標準プロセスに従い、最初の実験を成功させましょう。
+
+### ステップ 1: シミュレーションアセットの準備
+
+プラグイン、設定、データを `MAS-Package.zip` と `Data.zip` にパッケージングします。
 
 ```
 MAS-Package.zip
@@ -102,9 +102,9 @@ MAS-Package.zip
 │   ├── agents_config.yaml
 │   ├── simulation_config.yaml
 │   └── ...
-├── custom_controller.py (optional)
-├── custom_pod_manager.py (optional)
-└── custom_folder/ (optional)
+├── custom_controller.py（オプション）
+├── custom_pod_manager.py（オプション）
+└── custom_folder/（オプション）
 
 Data.zip
 └── your_dataset/
@@ -114,76 +114,76 @@ Data.zip
     └── ...
 ```
 
-### Step 2: Upload Files
+### ステップ 2: ファイルのアップロード
 
-Upload the MAS-Package and Data on the **File Management** page and confirm successful recognition.
+**ファイル管理** ページで MAS-Package と Data をアップロードし、正常に認識されたことを確認します。
 
-### Step 3: Verify Configuration
+### ステップ 3: 設定の確認
 
-Add or modify configurations in the **Configuration Center** to ensure files meet requirements.
+**設定センター** で設定を追加・変更し、ファイルが要件を満たしていることを確認します。
 
-### Step 4: Start Simulation
+### ステップ 4: シミュレーション開始
 
-Return to the **Dashboard**, click the **Start** button, and observe the status indicator and log output.
+**ダッシュボード** に戻り、**開始** ボタンをクリックして、ステータスインジケーターとログ出力を観察します。
 
-### Step 5: Interact & Observe
+### ステップ 5: 操作と観察
 
-Send commands via the **God Mode Console** or monitor agent behaviors in the logs.
+**God Mode コンソール** からコマンドを送信するか、ログでエージェントの行動を監視します。
 
 ---
 
 ## ❓ FAQ
 
-When encountering errors, check these scenarios first to quickly identify the root cause.
+エラーが発生した場合は、まず以下のシナリオを確認して根本原因を迅速に特定してください。
 
-### What should I do if an error occurs after clicking Start?
+### 開始ボタンをクリックした後にエラーが発生した場合は？
 
-Verify that the startup script output and config file match the current service address. Common causes include unready dependency containers or YAML path errors.
+起動スクリプトの出力と設定ファイルが現在のサービスアドレスと一致していることを確認してください。よくある原因は、依存コンテナの準備未完了や YAML パスのエラーです。
 
-### Why can't I see the new plugin in the config page after upload?
+### アップロード後に設定ページで新しいプラグインが表示されない場合は？
 
-Confirm the plugin inherits from the correct framework base class and that the MAS-Package upload succeeded. If necessary, manually execute **"Regenerate Registry"** in the Dashboard.
+プラグインが正しいフレームワーク基底クラスを継承していること、および MAS-Package のアップロードが成功していることを確認してください。必要に応じて、ダッシュボードで **「レジストリ再生成」** を手動実行してください。
 
-### What if the port is already in use?
+### ポートが既に使用中の場合は？
 
-Modify `FRONTEND_PORT` and `BACKEND_PORT` in `scripts/start_society_panel.sh` (or `.bat` for Windows), or adjust the port mapping in Docker Compose.
+`scripts/start_society_panel.sh`（Windows の場合は `.bat`）内の `FRONTEND_PORT` と `BACKEND_PORT` を変更するか、Docker Compose のポートマッピングを調整してください。
 
 ---
 
-## 📁 Project Structure
+## 📁 プロジェクト構成
 
 ```
 society-panel/
-├── assets/                 # Documentation images
-├── backend/                # FastAPI backend service
+├── assets/                 # ドキュメント用画像
+├── backend/                # FastAPI バックエンドサービス
 │   ├── app/
-│   │   ├── api/            # API endpoints
-│   │   ├── services/       # Business logic
-│   │   └── main.py         # Application entry
-│   └── workspace/          # Runtime workspace
-└── frontend/               # Vue 3 + Vite frontend
+│   │   ├── api/            # API エンドポイント
+│   │   ├── services/       # ビジネスロジック
+│   │   └── main.py         # アプリケーションエントリ
+│   └── workspace/          # ランタイムワークスペース
+└── frontend/               # Vue 3 + Vite フロントエンド
     ├── src/
-    │   ├── components/     # UI components
-    │   ├── views/          # Page views
-    │   ├── stores/         # Pinia state management
-    │   └── router/         # Vue Router config
+    │   ├── components/     # UI コンポーネント
+    │   ├── views/          # ページビュー
+    │   ├── stores/         # Pinia 状態管理
+    │   └── router/         # Vue Router 設定
     └── package.json
 ```
 
 ---
 
-## 🛠️ Development
+## 🛠️ 開発
 
-### Prerequisites
+### 前提条件
 
-- Python 3.11+ (< 3.13)
+- Python 3.11+（< 3.13）
 - [uv](https://docs.astral.sh/uv/)
 - Node.js 18+
-- npm or pnpm
+- npm または pnpm
 
-### Running Locally
+### ローカルでの実行
 
-From the project root directory:
+プロジェクトルートディレクトリから:
 
 ```bash
 # macOS / Linux
@@ -193,16 +193,15 @@ From the project root directory:
 scripts\start_society_panel.bat
 ```
 
-The script will automatically:
-1. Sync Python dependencies via `uv sync`
-2. Install npm packages for the frontend
-3. Start both backend (port 8001) and frontend (port 5174) services
+スクリプトは以下を自動的に実行します:
+1. `uv sync` で Python の依存関係を同期
+2. フロントエンドの npm パッケージをインストール
+3. バックエンド（ポート 8001）とフロントエンド（ポート 5174）の両サービスを起動
 
-Access the panel at: **http://localhost:5174**
+パネルへのアクセス: **http://localhost:5174**
 
 ---
 
-## 📄 License
+## 📄 ライセンス
 
-This project is part of the AgentKernel framework. See the root [LICENSE](../LICENSE) file for details.
-
+本プロジェクトは AgentKernel フレームワークの一部です。詳細はルートの [LICENSE](../LICENSE) ファイルをご覧ください。
