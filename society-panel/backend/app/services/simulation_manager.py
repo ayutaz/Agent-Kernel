@@ -10,6 +10,7 @@ from enum import Enum
 from typing import Any, Dict, Optional
 import ray
 from datetime import datetime
+from dotenv import load_dotenv
 
 from agentkernel_distributed.mas.builder import Builder
 from agentkernel_distributed.mas.pod import BasePodManager
@@ -79,6 +80,13 @@ class SimulationManager:
         self._error_message = None
         print("Attempting to start simulation...")
 
+        # Auto-regenerate registry.py to fix import paths
+        from .registry_generator import registry_generator
+        try:
+            await registry_generator.generate_registry_file(self.workspace_path)
+        except Exception as e:
+            print(f"Warning: Failed to auto-regenerate registry: {e}")
+
         await self.cleanup()
 
         self._simulation_task = asyncio.create_task(self._run_simulation_loop())
@@ -98,6 +106,11 @@ class SimulationManager:
         Execute the core simulation loop.
         """
         try:
+            # Load .env file for API keys
+            dotenv_path = os.path.join(self.workspace_path, ".env")
+            if os.path.exists(dotenv_path):
+                load_dotenv(dotenv_path, override=False)
+
             if not ray.is_initialized():
                 backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
                 current_pythonpath = os.environ.get("PYTHONPATH", "")
@@ -107,6 +120,7 @@ class SimulationManager:
                     "working_dir": self.workspace_path,
                     "env_vars": {
                         "PYTHONPATH": new_pythonpath,
+                        "OPENAI_API_KEY": os.environ.get("OPENAI_API_KEY", ""),
                     },
                     "excludes": [
                         os.path.join(backend_dir, ".venv"),

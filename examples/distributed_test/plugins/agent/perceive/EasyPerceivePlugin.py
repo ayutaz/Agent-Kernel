@@ -8,7 +8,6 @@ from agentkernel_distributed.types.schemas.message import Message
 from agentkernel_distributed.mas.agent.base.plugin_base import PerceivePlugin
 from agentkernel_distributed.mas.environment.components import *
 from agentkernel_distributed.toolkit.logger import get_logger
-from agentkernel_distributed.types.schemas.agent import PerceptionData
 
 logger = get_logger(__name__)
 

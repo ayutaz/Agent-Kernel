@@ -2,7 +2,6 @@ import json
 from typing import Dict, Any, Optional
 from agentkernel_distributed.toolkit.logger import get_logger
 from agentkernel_distributed.mas.agent.base.plugin_base import StatePlugin
-from agentkernel_distributed.types.schemas.agent import ActionRecord, ActionOutcome
 
 logger = get_logger(__name__)
 
@@ -20,4 +19,7 @@ class EasyStatePlugin(StatePlugin):
         logger.info(f'Agent {self.agent_id} have the same state as yesterday.')
     
     async def set_state(self, key: str, value: Any):
-        pass
+        self._state_data[key] = value
+
+    async def get_state(self, key: str) -> Any:
+        return self._state_data.get(key)
