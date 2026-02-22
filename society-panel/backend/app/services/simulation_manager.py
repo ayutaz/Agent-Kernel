@@ -253,6 +253,17 @@ class SimulationManager:
         self._simulation_task = None
         print("Cleanup complete.")
 
+    async def get_agent_positions(self) -> Dict[str, Any]:
+        """Get current positions of all agents for map visualization."""
+        if self._status != SimulationStatus.RUNNING or not self._pod_manager:
+            return {"status": "not_running", "tick": None, "agent_count": 0, "agents": []}
+        try:
+            agents = await self._pod_manager.get_all_agent_positions.remote()
+            tick = await self._system.run("timer", "get_tick") if self._system else None
+            return {"status": "ok", "tick": tick, "agent_count": len(agents), "agents": agents}
+        except Exception as e:
+            return {"status": "error", "tick": None, "agent_count": 0, "agents": [], "error": str(e)}
+
     async def execute_god_command(self, command: str, params: Dict[str, Any]):
         """
         Execute a god mode command on the PodManager.

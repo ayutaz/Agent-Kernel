@@ -33,3 +33,28 @@ class CustomPodManager(PodManagerImpl):
             logger.info("Update agent status completed across all pods.")
         except Exception as exc:
             logger.error("Failed to update agent status: %s", exc, exc_info=True)
+
+    async def get_all_agent_positions(self) -> list:
+        """Get current positions of all agents from space environment across all pods."""
+        try:
+            results = await asyncio.gather(
+                *(pod.forward.remote("run_environment", "space", "get_all_agents")
+                  for pod in self._pod_id_to_pod.values()),
+                return_exceptions=True,
+            )
+        except Exception as exc:
+            logger.error("Failed to gather agent positions: %s", exc, exc_info=True)
+            return []
+
+        seen_ids: set = set()
+        all_agents: list = []
+        for result in results:
+            if isinstance(result, (Exception, BaseException)):
+                continue
+            if isinstance(result, list):
+                for agent in result:
+                    aid = agent.get("id", "")
+                    if aid not in seen_ids:
+                        seen_ids.add(aid)
+                        all_agents.append({"id": aid, "position": agent.get("position", [0, 0])})
+        return all_agents

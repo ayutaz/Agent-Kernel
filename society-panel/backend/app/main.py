@@ -97,6 +97,12 @@ async def get_simulation_status():
     return simulation_manager.status
 
 
+@app.get("/api/simulation/map/agents", tags=["Simulation"])
+async def get_map_agents():
+    """Get current positions of all agents for map visualization."""
+    return await simulation_manager.get_agent_positions()
+
+
 @app.get("/api/simulation/commands", tags=["Simulation"])
 async def get_pod_manager_commands():
     """
