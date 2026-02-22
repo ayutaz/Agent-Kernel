@@ -33,3 +33,14 @@ mkdocs.yml
 generate_static_docs.py
 figure/
 per_tick_reports/
+
+# Claude Code local settings
+.claude/settings.local.json
+
+# Simulation outputs
+trajectory_*.json
+society-panel/backend/recordings/
+
+# Temporary files
+tmp_*.json
+nul
