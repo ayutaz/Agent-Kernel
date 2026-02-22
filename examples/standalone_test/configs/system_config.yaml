@@ -25,10 +25,5 @@ components:
     timeout_ticks: 5
     # --- MODIFIED: Removed 'plugins' section for timer ---
 
-  # ------Use Local------
-  # recorder:
-  #   dbname: "log_recorder"
-  #   user: "postgres"
-  #   password: "123456"  
-  #   host: "localhost"
-  #   port: 5432
+  recorder:
+    enable_db: false

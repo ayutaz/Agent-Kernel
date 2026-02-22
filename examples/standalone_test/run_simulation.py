@@ -12,6 +12,7 @@ load_dotenv()
 project_path = os.path.dirname(os.path.abspath(__file__))
 
 os.environ["MAS_PROJECT_ABS_PATH"] = project_path
+os.environ["MAS_EVENT_LOG_DIR"] = project_path
 if "MAS_PROJECT_REL_PATH" not in os.environ:
     os.environ["MAS_PROJECT_REL_PATH"] = "examples.standalone_test"
 
