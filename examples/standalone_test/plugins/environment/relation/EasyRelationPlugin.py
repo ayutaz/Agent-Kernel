@@ -13,6 +13,16 @@ class EasyRelationPlugin(RelationPlugin):
     async def init(self):
         pass
     
+    async def get_friends(self, agent_id: str) -> list[str]:
+        """Return list of friend IDs for the given agent."""
+        friends = []
+        for rel in self.relations:
+            if rel.get("source_id") == agent_id:
+                friends.append(rel["target_id"])
+            elif rel.get("target_id") == agent_id:
+                friends.append(rel["source_id"])
+        return friends
+
     async def save_to_db(self):
         pass
-            
+

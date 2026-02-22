@@ -103,8 +103,8 @@ async def main():
                             "to_id": agent_id,
                             "content": msg.get("content", ""),
                         })
-                except Exception:
-                    pass
+                except Exception as e:
+                    logger.warning(f"Failed to get messages for {agent_id}: {e}")
 
             # Record frame for Society Panel replay
             try:

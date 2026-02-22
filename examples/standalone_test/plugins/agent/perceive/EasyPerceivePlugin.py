@@ -6,7 +6,7 @@ import math
 
 from agentkernel_standalone.types.schemas.message import Message
 from agentkernel_standalone.mas.agent.base.plugin_base import PerceivePlugin
-from agentkernel_standalone.mas.environment.components import *
+from agentkernel_standalone.mas.agent.components import *
 from agentkernel_standalone.toolkit.logger import get_logger
 
 logger = get_logger(__name__)
@@ -25,6 +25,7 @@ class EasyPerceivePlugin(PerceivePlugin):
         self.received_messages = []
         self.last_tick_messages = []
         self.surrounding_agents = []
+        self.friends = []
         logger.info(f"EasyPerceivePlugin initialized.")
 
     async def init(self):
@@ -43,7 +44,7 @@ class EasyPerceivePlugin(PerceivePlugin):
         )
         # Get current postion.
 
-        could_see_distance = 10
+        could_see_distance = 50
         self.surrounding_agents = []
         self.all_agents = []
 
@@ -59,6 +60,12 @@ class EasyPerceivePlugin(PerceivePlugin):
                     self.surrounding_agents.append(agent)
 
         logger.info(f"Agent {self.agent_id} looked around, and found {len(self.surrounding_agents)} agents.")
+
+        # Fetch friend list from relation environment
+        try:
+            self.friends = await self.controller.run_environment("relation", "get_friends", self.agent_id)
+        except Exception:
+            self.friends = []
 
     async def get_received_messages(self) -> list:
         """Return a copy of currently received messages for external inspection."""

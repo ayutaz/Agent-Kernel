@@ -2,9 +2,9 @@ templates:
   - name: "EasyAgent"
     component_order:
         - "perceive"
+        - "state"
         - "plan"
         - "invoke"
-        - "state"
         - "reflect"
     components:
       profile:

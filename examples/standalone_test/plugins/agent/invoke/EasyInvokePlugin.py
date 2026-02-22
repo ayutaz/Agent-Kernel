@@ -13,23 +13,35 @@ class EasyInvokePlugin(InvokePlugin):
         self.plan_comp = None
         self.plans = []
         self.controller = None
-    async def init(self): 
+    async def init(self):
         self.agent_id = self._component.agent.agent_id
         self.plan_comp = self._component.agent.get_component('plan')
         self.plan_plug = self.plan_comp._plugin
         self.controller = self._component.agent.controller
     async def execute(self, current_tick: int):
-        
+
         self.plans = self.plan_plug.plan
         for plan in self.plans:
-            if plan['action'] == 'move':
-                await self.move_to_pos(tuple(plan['target']))
-            elif plan['action'] == 'chat':
-                await self.chat_with_agent(plan['target'], plan['content'])
-                
+            try:
+                action = plan.get('action', '')
+                if action == 'move':
+                    target = plan.get('target', [150, 150])
+                    x = max(0, min(300, int(target[0])))
+                    y = max(0, min(300, int(target[1])))
+                    await self.move_to_pos((x, y))
+                elif action == 'chat':
+                    target_id = plan.get('target', '')
+                    content = plan.get('content', '')
+                    if target_id and content:
+                        await self.chat_with_agent(target_id, content)
+                else:
+                    logger.warning(f"Agent {self.agent_id}: unknown action '{action}'")
+            except Exception as e:
+                logger.error(f"Agent {self.agent_id}: error executing plan: {e}")
+
     async def move_to_pos(self, target: tuple[int, int]):
-        await self.controller.run_environment('space', 'update_agent_position', 
-                                        agent_id = self.agent_id, 
+        await self.controller.run_environment('space', 'update_agent_position',
+                                        agent_id = self.agent_id,
                                         new_position = target
                                         )
         logger.info(f'Agent {self._component.agent.agent_id} move to {target}')
