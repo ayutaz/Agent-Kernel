@@ -70,6 +70,8 @@ Agent-Kernel は以下をサポートします:
 
 - **異なるシミュレーションシナリオ間でのコード再利用**。
 
+- **シミュレーションの録画とリプレイ** — 実行結果をJSON形式で保存し、Society PanelのリプレイビューやAgent Mapで可視化・再生。
+
 ## 🎬 活用事例
 
 Agent-Kernel は複数の複雑な社会シミュレーションシナリオに適用されています:
@@ -275,7 +277,10 @@ MAS/
 │
 ├── society-panel/
 │   ├── backend/                   # FastAPI バックエンドサービス
+│   │   └── recordings/            # シミュレーション録画データ
 │   └── frontend/                  # Vue 3 + Vite フロントエンド
+│
+├── scripts/                       # 起動スクリプト
 │
 └── README.md
 ```

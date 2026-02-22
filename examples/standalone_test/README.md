@@ -1,7 +1,22 @@
 # はじめに
 この例では、Agent-Kernel を使ったシンプルなマルチエージェントシステムの構築方法を示します。実行フローの理解と将来の拡張を容易にするために設計されています。
 
-プロセスを簡素化するため、5つのコアプラグイン（Perceive、Plan、Invoke、Communication、Space）の基本実装を提供しています。残りのプラグインはプレースホルダー（pass を使用）として構成されており、ユーザーが自由にカスタマイズ・拡張できます。
+以下のプラグインの実装例を提供しています:
+- **エージェント**: Perceive, State, Plan, Invoke, Reflect, Profile
+- **アクション**: Communication
+- **環境**: Space, Relation
+
+### エージェントプロファイル
+
+各エージェントは `data/agents/profiles.jsonl` で定義されるプロファイルを持ちます。`personality`（性格）、`occupation`（職業）、`goal`（目標）フィールドがLLMプロンプトに注入され、個性的な行動を生成します。
+
+### コンポーネント実行順序
+
+`configs/agents_config.yaml` の `component_order` により、各tickで `perceive → state → plan → invoke → reflect` の順にコンポーネントが実行されます。`state` を `plan` の前に配置することで、計画立案時に最新の状態情報（会話履歴、最近の対話相手）を参照できます。
+
+### シミュレーション録画
+
+シミュレーション実行時、各tickのエージェント位置とメッセージが自動的に録画され、`society-panel/backend/recordings/` に `recording_*.json` として保存されます。また、エージェントの行動軌跡は `trajectory_*.json` として保存されます。
 
 # クイックスタート
 1. 以下のいずれかの方法で API キーを設定します:
