@@ -23,6 +23,30 @@ const selectedAgent = computed(() => {
   if (!selectedAgentId.value) return null
   return replayStore.agents.find(a => a.id === selectedAgentId.value) || null
 })
+
+const STATUS_DEFS = [
+  { key: 'health', label: '体力', color: '#ef4444' },
+  { key: 'energy', label: 'エネルギー', color: '#f59e0b' },
+  { key: 'happiness', label: '幸福度', color: '#22c55e' },
+  { key: 'stress', label: 'ストレス', color: '#8b5cf6' },
+  { key: 'socialization', label: '社交性', color: '#3b82f6' },
+  { key: 'money', label: '資金', color: '#06b6d4' },
+]
+
+const statusBars = computed(() => {
+  if (!selectedAgent.value?.status) return []
+  const st = selectedAgent.value.status
+  return STATUS_DEFS.map(d => {
+    const raw = st[d.key] ?? 0
+    // money can exceed 100 — cap percentage at 100
+    const pct = d.key === 'money' ? Math.min(100, raw / 100) : Math.min(100, raw)
+    return { ...d, value: raw, pct }
+  })
+})
+
+const filteredMessages = computed(() => {
+  return replayStore.messages
+})
 </script>
 
 <template>
@@ -53,6 +77,7 @@ const selectedAgent = computed(() => {
               :map-size-override="replayStore.mapSize"
               :selected-agent-id-override="selectedAgentId"
               :hovered-agent-id-override="hoveredAgentId"
+              :agent-trails="replayStore.agentTrails"
               @agent-click="onAgentClick"
               @agent-hover="onAgentHover"
             />
@@ -84,9 +109,40 @@ const selectedAgent = computed(() => {
               <span class="info-label">Y</span>
               <span class="info-value">{{ selectedAgent.position[1] }}</span>
             </div>
+
+            <template v-if="selectedAgent.status">
+              <div class="status-section-title">ステータス</div>
+              <div v-for="stat in statusBars" :key="stat.key" class="status-bar-row">
+                <span class="status-label">{{ stat.label }}</span>
+                <div class="status-bar-track">
+                  <div class="status-bar-fill" :style="{ width: stat.pct + '%', background: stat.color }"></div>
+                </div>
+                <span class="status-value">{{ stat.value }}</span>
+              </div>
+            </template>
           </div>
           <div v-else class="placeholder">
             <p>マップ上のエージェントをクリックすると詳細が表示されます。</p>
+          </div>
+        </div>
+
+        <div class="panel-container message-panel" v-if="replayStore.recording">
+          <h3>メッセージログ</h3>
+          <div v-if="filteredMessages.length > 0" class="message-list">
+            <div
+              v-for="(msg, idx) in filteredMessages"
+              :key="idx"
+              class="message-item"
+              :class="{ 'message-highlight': selectedAgentId && (msg.from_id === selectedAgentId || msg.to_id === selectedAgentId) }"
+            >
+              <span class="msg-from">{{ msg.from_id }}</span>
+              <span class="msg-arrow">→</span>
+              <span class="msg-to">{{ msg.to_id }}</span>
+              <span class="msg-content">{{ msg.content }}</span>
+            </div>
+          </div>
+          <div v-else class="placeholder">
+            <p>このTickにメッセージはありません</p>
           </div>
         </div>
       </div>
@@ -233,6 +289,121 @@ const selectedAgent = computed(() => {
   color: var(--text-muted, #888);
   font-size: 0.9rem;
   margin: 0;
+}
+
+.status-section-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 0.5rem;
+}
+
+.status-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.status-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-secondary, #555);
+  width: 5em;
+  flex-shrink: 0;
+}
+
+.status-bar-track {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-inset-light, #eee);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+[data-theme='dark'] .status-bar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.status-bar-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.status-value {
+  font-size: 0.8rem;
+  font-family: var(--font-family-mono, monospace);
+  color: var(--text-primary, #222);
+  width: 3em;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.message-panel h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.message-list {
+  max-height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.message-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  background: var(--bg-inset-light, #f5f5f5);
+}
+
+[data-theme='dark'] .message-item {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.message-highlight {
+  background: color-mix(in srgb, #3b82f6 15%, transparent) !important;
+  border-left: 3px solid #3b82f6;
+}
+
+[data-theme='dark'] .message-highlight {
+  background: color-mix(in srgb, #60a5fa 20%, transparent) !important;
+  border-left-color: #60a5fa;
+}
+
+.msg-from {
+  font-weight: 600;
+  color: var(--text-primary, #222);
+  white-space: nowrap;
+}
+
+.msg-arrow {
+  color: var(--text-muted, #888);
+  flex-shrink: 0;
+}
+
+.msg-to {
+  font-weight: 600;
+  color: var(--text-primary, #222);
+  white-space: nowrap;
+}
+
+.msg-content {
+  color: var(--text-secondary, #555);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-left: 0.25rem;
 }
 
 @media (max-width: 1024px) {

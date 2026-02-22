@@ -9,6 +9,7 @@ const props = defineProps({
   mapSizeOverride: { type: Number, default: null },
   selectedAgentIdOverride: { type: String, default: null },
   hoveredAgentIdOverride: { type: String, default: null },
+  agentTrails: { type: Object, default: null },
 })
 const emit = defineEmits(['agent-click', 'agent-hover'])
 
@@ -46,6 +47,14 @@ function getColors() {
     dotSelected: isDark ? '#f472b6' : '#ec4899',
     border: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)',
   }
+}
+
+function healthToColor(health) {
+  // Green (100) → Yellow (50) → Red (0)
+  const h = Math.max(0, Math.min(100, health))
+  const r = h < 50 ? 255 : Math.round(255 - (h - 50) * 5.1)
+  const g = h > 50 ? 255 : Math.round(h * 5.1)
+  return `rgb(${r},${g},60)`
 }
 
 function draw() {
@@ -100,6 +109,26 @@ function draw() {
     ctx.fillText(String(i), 2, pos + 2)
   }
 
+  // Trail lines
+  const trails = props.agentTrails
+  if (trails) {
+    for (const [agentId, positions] of Object.entries(trails)) {
+      if (positions.length < 2) continue
+      for (let i = 1; i < positions.length; i++) {
+        const alpha = 0.1 + (i / positions.length) * 0.4
+        ctx.beginPath()
+        ctx.moveTo(positions[i - 1][0] * s, positions[i - 1][1] * s)
+        ctx.lineTo(positions[i][0] * s, positions[i][1] * s)
+        ctx.strokeStyle = colors.dot
+        ctx.globalAlpha = alpha
+        ctx.lineWidth = 1.5
+        ctx.stroke()
+      }
+    }
+    ctx.globalAlpha = 1
+    ctx.lineWidth = 1
+  }
+
   // Agent dots
   const agents = effectiveAgents.value
   const selId = effectiveSelectedAgentId.value
@@ -111,6 +140,11 @@ function draw() {
 
     let radius = 4
     let fillColor = colors.dot
+
+    // Color by health status if available
+    if (agent.status && agent.status.health != null) {
+      fillColor = healthToColor(agent.status.health)
+    }
 
     if (agent.id === selId) {
       fillColor = colors.dotSelected
@@ -184,7 +218,9 @@ function onMouseMove(e) {
       visible: true,
       x: e.clientX - rect.left + 12,
       y: e.clientY - rect.top - 8,
-      text: `${agent.id} (${agent.position[0]}, ${agent.position[1]})`
+      text: agent.status
+        ? `${agent.id} ❤${agent.status.health} ⚡${agent.status.energy} 😊${agent.status.happiness}`
+        : `${agent.id} (${agent.position[0]}, ${agent.position[1]})`
     }
   } else {
     if (isOverrideMode.value) {
@@ -244,6 +280,7 @@ watch(() => effectiveAgents.value, draw, { deep: true })
 watch(() => themeStore.isDark, draw)
 watch(() => effectiveSelectedAgentId.value, draw)
 watch(() => effectiveHoveredAgentId.value, draw)
+watch(() => props.agentTrails, draw, { deep: true })
 </script>
 
 <template>

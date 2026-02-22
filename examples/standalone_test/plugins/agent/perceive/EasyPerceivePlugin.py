@@ -60,6 +60,10 @@ class EasyPerceivePlugin(PerceivePlugin):
 
         logger.info(f"Agent {self.agent_id} looked around, and found {len(self.surrounding_agents)} agents.")
 
+    async def get_received_messages(self) -> list:
+        """Return a copy of currently received messages for external inspection."""
+        return list(self.received_messages)
+
     async def add_message(self, message: Message):
         """
         Called by the system's dispatch function, add the message to the received_messages list.

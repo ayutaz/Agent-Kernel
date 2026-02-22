@@ -37,6 +37,27 @@ export const useReplayStore = defineStore('replay', () => {
     return recording.value.metadata?.map_size || 300
   })
 
+  const messages = computed(() => {
+    return currentFrame.value ? (currentFrame.value.messages || []) : []
+  })
+
+  const agentTrails = computed(() => {
+    if (!recording.value) return {}
+    const trailLength = 5
+    const startIdx = Math.max(0, currentFrameIndex.value - trailLength)
+    const endIdx = currentFrameIndex.value + 1
+    const trails = {}
+    for (let i = startIdx; i < endIdx; i++) {
+      const frame = recording.value.frames[i]
+      if (!frame) continue
+      for (const agent of frame.agents) {
+        if (!trails[agent.id]) trails[agent.id] = []
+        trails[agent.id].push(agent.position)
+      }
+    }
+    return trails
+  })
+
   async function fetchRecordings() {
     loadingList.value = true
     try {
@@ -163,6 +184,8 @@ export const useReplayStore = defineStore('replay', () => {
     currentTick,
     totalFrames,
     mapSize,
+    messages,
+    agentTrails,
     fetchRecordings,
     loadRecording,
     deleteRecording,

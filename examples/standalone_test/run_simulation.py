@@ -5,6 +5,8 @@ import os
 import asyncio
 import yaml
 import time
+import json
+from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -29,6 +31,10 @@ async def main():
     """Async main function to assemble and start the simulation"""
     controller = None
     system = None
+    recording_frames = []
+    repo_root = os.path.dirname(os.path.dirname(project_path))
+    recordings_path = os.path.join(repo_root, "society-panel", "backend", "recordings")
+    recording_metadata = {}
     try:
         logger.info(f"Project path set to: {project_path}")
 
@@ -37,6 +43,28 @@ async def main():
 
         logger.info("Assembling all simulation components...")
         controller, system = await sim_builder.init()
+
+        # --- Recording setup ---
+        os.makedirs(recordings_path, exist_ok=True)
+        recording_metadata = {
+            "created_at": datetime.now().isoformat(),
+            "max_ticks": sim_builder.config.simulation.max_ticks,
+            "map_size": 300,
+        }
+
+        # Load agent status data
+        status_path = os.path.join(project_path, "data", "agents", "status_example.jsonl")
+        agent_status = {}
+        if os.path.isfile(status_path):
+            with open(status_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    entry = json.loads(line)
+                    agent_status[entry["id"]] = {
+                        k: v for k, v in entry.items() if k != "id"
+                    }
 
         # --- Simulation Loop ---
         max_ticks = sim_builder.config.simulation.max_ticks
@@ -64,6 +92,39 @@ async def main():
 
             logger.info(f"--- Tick {current_tick} finished in {actual_tick_duration:.4f} seconds ---")
 
+            # Collect messages delivered this tick
+            tick_messages = []
+            for agent_id in controller.get_agent_ids():
+                try:
+                    msgs = await controller.run_agent_method(agent_id, "perceive", "get_received_messages")
+                    for msg in msgs:
+                        tick_messages.append({
+                            "from_id": msg.get("from_id", ""),
+                            "to_id": agent_id,
+                            "content": msg.get("content", ""),
+                        })
+                except Exception:
+                    pass
+
+            # Record frame for Society Panel replay
+            try:
+                agents = await controller.run_environment("space", "get_all_agents")
+                enriched_agents = []
+                for a in agents:
+                    agent_entry = {"id": a["id"], "position": a["position"]}
+                    if a["id"] in agent_status:
+                        agent_entry["status"] = agent_status[a["id"]]
+                    enriched_agents.append(agent_entry)
+
+                recording_frames.append({
+                    "tick": current_tick,
+                    "timestamp": datetime.now().isoformat(),
+                    "agents": enriched_agents,
+                    "messages": tick_messages,
+                })
+            except Exception as rec_err:
+                logger.warning(f"Failed to record frame at tick {current_tick}: {rec_err}")
+
         if num_ticks_to_run > 0:
             average_time_per_tick = total_duration / num_ticks_to_run
             logger.info(f"\n--- Ran {num_ticks_to_run} ticks. Average time per tick: {average_time_per_tick:.4f} seconds ---")
@@ -73,6 +134,21 @@ async def main():
         logger.error(f"Simulation failed: {e}")
         logger.exception("An unhandled exception occurred during simulation.")
     finally:
+        if recording_frames:
+            recording_metadata["total_ticks_recorded"] = len(recording_frames)
+            recording_metadata["agent_count"] = len(recording_frames[0].get("agents", []))
+            recording_data = {"metadata": recording_metadata, "frames": recording_frames}
+            recording_file = os.path.join(
+                recordings_path,
+                f"recording_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            )
+            try:
+                with open(recording_file, "w", encoding="utf-8") as f:
+                    json.dump(recording_data, f, ensure_ascii=False)
+                logger.info(f"Recording saved: {recording_file}")
+            except Exception as e:
+                logger.error(f"Failed to save recording: {e}")
+
         if controller:
             result = await controller.close()
             logger.info(f"Controller close result is {result}")
