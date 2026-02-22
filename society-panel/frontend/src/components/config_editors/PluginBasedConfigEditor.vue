@@ -1,22 +1,22 @@
 <!-- Generic editor for plugin-based configurations like actions and environment. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="isLoading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData && availablePlugins">
       <div class="form-group">
-        <label>Module Name</label>
+        <label>モジュール名</label>
         <input type="text" v-model="configData.name" />
       </div>
 
       <div v-for="(component, componentName) in configData.components" :key="componentName" class="component-section">
-        <h4>Component: <code>{{ componentName }}</code></h4>
+        <h4>コンポーネント: <code>{{ componentName }}</code></h4>
 
         <div v-if="component.plugin || component.plugins" class="form-group">
-          <label>Plugin</label>
+          <label>プラグイン</label>
           <select :value="getCurrentPluginName(component)" @change="onPluginChange(component, $event.target.value)">
-            <option disabled value="">Select a plugin</option>
+            <option disabled value="">プラグインを選択</option>
             <option v-for="pluginName in availablePlugins[configType + '_plugins'][componentName]" :key="pluginName" :value="pluginName">
               {{ pluginName }}
             </option>
@@ -31,20 +31,20 @@
               :value="formatParamValue(paramValue)"
               @input="updatePluginParam(component, paramKey, $event.target.value)"
             />
-            <button @click="removePluginParam(component, paramKey)" class="delete-field-btn" title="Remove parameter">×</button>
+            <button @click="removePluginParam(component, paramKey)" class="delete-field-btn" title="パラメータを削除">×</button>
           </div>
 
           <div class="add-field-section">
-            <input type="text" v-model="newParam[componentName].key" placeholder="New parameter name">
-            <input type="text" v-model="newParam[componentName].value" placeholder="Value">
-            <button @click="addPluginParam(component, componentName)">Add Parameter</button>
+            <input type="text" v-model="newParam[componentName].key" placeholder="新規パラメータ名">
+            <input type="text" v-model="newParam[componentName].value" placeholder="値">
+            <button @click="addPluginParam(component, componentName)">パラメータ追加</button>
           </div>
         </div>
       </div>
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : `Save ${configName}` }}
+          {{ isSaving ? '保存中...' : `${configName} を保存` }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

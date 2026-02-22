@@ -28,21 +28,21 @@ const selectedAgent = computed(() => {
 <template>
   <div class="replay-view">
     <div class="page-header">
-      <h1>Replay</h1>
-      <p>Play back recorded simulation runs to review agent movements.</p>
+      <h1>録画再生</h1>
+      <p>過去のシミュレーション実行を再生し、エージェントの動きを確認できます。</p>
     </div>
 
     <div class="replay-grid">
       <div class="main-panel">
         <div class="panel-container map-panel">
           <div class="map-header">
-            <h3>Replay View</h3>
+            <h3>再生ビュー</h3>
             <div class="map-meta" v-if="replayStore.recording">
               <span class="meta-chip meta-chip--ok">
                 Tick {{ replayStore.currentTick ?? '-' }}
               </span>
               <span class="meta-chip">
-                {{ replayStore.agents.length }} agents
+                {{ replayStore.agents.length }} エージェント
               </span>
             </div>
           </div>
@@ -58,8 +58,8 @@ const selectedAgent = computed(() => {
             />
           </div>
           <div v-else class="map-placeholder">
-            <p v-if="replayStore.loadingRecording">Loading recording...</p>
-            <p v-else>Select a recording from the list to start playback.</p>
+            <p v-if="replayStore.loadingRecording">録画を読み込み中...</p>
+            <p v-else>一覧から録画を選択して再生を開始してください。</p>
           </div>
         </div>
 
@@ -70,7 +70,7 @@ const selectedAgent = computed(() => {
         <RecordingList />
 
         <div class="panel-container detail-panel" v-if="replayStore.recording">
-          <h3>Agent Detail</h3>
+          <h3>エージェント詳細</h3>
           <div v-if="selectedAgent" class="agent-info">
             <div class="info-row">
               <span class="info-label">ID</span>
@@ -86,7 +86,7 @@ const selectedAgent = computed(() => {
             </div>
           </div>
           <div v-else class="placeholder">
-            <p>Click an agent on the map to view details.</p>
+            <p>マップ上のエージェントをクリックすると詳細が表示されます。</p>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ const confirmDialog = ref(null);
 const zones = reactive({
   package: {
     title: 'MAS-Package',
-    description: 'Contains all logic: plugins, configs, and custom Python code.',
+    description: 'プラグイン、設定、カスタムPythonコードなど全てのロジックを含みます。',
     file: null,
     isDragOver: false,
     isLoading: false,
@@ -25,7 +25,7 @@ const zones = reactive({
   },
   data: {
     title: 'Data',
-    description: 'Datasets for agent profiles, environment objects, and relationships.',
+    description: 'エージェントプロファイル、環境オブジェクト、関係性のデータセット。',
     file: null,
     isDragOver: false,
     isLoading: false,
@@ -48,7 +48,7 @@ const fetchPackageContents = async () => {
     zone.plugins = pluginsRes.data;
     zone.contents = contentsRes.data;
   } catch (error) {
-    zone.message = 'Failed to load existing package contents.';
+    zone.message = '既存パッケージ内容の読み込みに失敗しました。';
     zone.messageType = 'error';
     console.error('Error fetching package contents:', error);
   }
@@ -60,7 +60,7 @@ const fetchDataContents = async () => {
     const response = await axios.get(zone.listUrl);
     zone.items = response.data;
   } catch (error) {
-    zone.message = 'Failed to load existing data files.';
+    zone.message = '既存データファイルの読み込みに失敗しました。';
     zone.messageType = 'error';
     console.error('Error fetching data files:', error);
   }
@@ -76,7 +76,7 @@ const processFile = (zone, droppedFile) => {
     zone.file = droppedFile;
     zone.message = '';
   } else {
-    zone.message = 'Please drop a .zip file.';
+    zone.message = '.zipファイルをドロップしてください。';
     zone.messageType = 'error';
   }
   zone.isDragOver = false;
@@ -103,7 +103,7 @@ const handleUpload = async (zoneKey) => {
       await fetchDataContents();
     }
   } catch (error) {
-    zone.message = error.response?.data?.detail || `An error occurred during ${zone.title} upload.`;
+    zone.message = error.response?.data?.detail || `${zone.title}のアップロード中にエラーが発生しました。`;
     zone.messageType = 'error';
   } finally {
     zone.isLoading = false;
@@ -153,10 +153,10 @@ const hasPlugins = (zone) => {
 
 const handleDeleteItem = async (type, itemName) => {
   const confirmed = await confirmDialog.value.show({
-    title: 'Delete File',
-    message: `Are you sure you want to delete "${itemName}"? This action cannot be undone.`,
-    confirmText: 'Delete',
-    cancelText: 'Cancel',
+    title: 'ファイルの削除',
+    message: `"${itemName}" を削除してもよろしいですか？この操作は取り消せません。`,
+    confirmText: '削除',
+    cancelText: 'キャンセル',
     isDanger: true
   });
   
@@ -178,10 +178,10 @@ const handleDeleteItem = async (type, itemName) => {
 const handleClearAll = async (type) => {
   const zone = zones[type];
   const confirmed = await confirmDialog.value.show({
-    title: 'Clear All Files',
-    message: `Are you sure you want to clear all ${zone.title} files? This action cannot be undone.`,
-    confirmText: 'Clear All',
-    cancelText: 'Cancel',
+    title: '全ファイルの削除',
+    message: `${zone.title}の全ファイルを削除してもよろしいですか？この操作は取り消せません。`,
+    confirmText: '全削除',
+    cancelText: 'キャンセル',
     isDanger: true
   });
   
@@ -202,10 +202,10 @@ const handleClearAll = async (type) => {
 
 const handleDeletePlugin = async (pluginType, category, pluginName) => {
   const confirmed = await confirmDialog.value.show({
-    title: 'Delete Plugin',
-    message: `Are you sure you want to delete plugin "${pluginName}"? This will remove the entire ${category} plugin folder.`,
-    confirmText: 'Delete',
-    cancelText: 'Cancel',
+    title: 'プラグインの削除',
+    message: `プラグイン "${pluginName}" を削除してもよろしいですか？${category}プラグインフォルダ全体が削除されます。`,
+    confirmText: '削除',
+    cancelText: 'キャンセル',
     isDanger: true
   });
   
@@ -226,8 +226,8 @@ const handleDeletePlugin = async (pluginType, category, pluginName) => {
   <div class="files-view">
     <ConfirmDialog ref="confirmDialog" />
     <div class="page-header">
-      <h1>File Management</h1>
-      <p>Package your custom code and configs into <strong>.zip files</strong> to upload, and provide the data required for simulation.</p>
+      <h1>ファイル管理</h1>
+      <p>カスタムコードと設定を<strong>.zipファイル</strong>にまとめてアップロードし、シミュレーションに必要なデータを提供します。</p>
     </div>
 
     <div class="management-grid">
@@ -251,18 +251,18 @@ const handleDeletePlugin = async (pluginType, category, pluginName) => {
             />
             <div v-if="!zone.file" class="placeholder-content">
               <div class="icon"><AppIcons :name="key === 'package' ? 'package' : 'data'" :size="48" /></div>
-              <h3>Drop {{ zone.title }}.zip here</h3>
-              <p>or click to select</p>
+              <h3>{{ zone.title }}.zip をここにドロップ</h3>
+              <p>またはクリックして選択</p>
             </div>
             <div v-else class="file-preview-content">
               <div class="icon success-icon">✓</div>
-              <h3>File Ready</h3>
+              <h3>ファイル準備完了</h3>
               <p class="file-name">{{ zone.file.name }}</p>
               <div class="button-group">
                 <button @click.stop="handleUpload(key)" :disabled="zone.isLoading" class="upload-btn">
-                  {{ zone.isLoading ? 'Uploading...' : 'Upload' }}
+                  {{ zone.isLoading ? 'アップロード中...' : 'アップロード' }}
                 </button>
-                <button @click.stop="clearFile(zone)" class="clear-btn">Clear</button>
+                <button @click.stop="clearFile(zone)" class="clear-btn">クリア</button>
               </div>
             </div>
           </div>
@@ -271,18 +271,18 @@ const handleDeletePlugin = async (pluginType, category, pluginName) => {
 
         <div class="existing-content-container panel-container">
           <div class="existing-header">
-            <h3>Existing {{ zone.title }}</h3>
+            <h3>既存の{{ zone.title }}</h3>
             <button 
               @click="handleClearAll(key)" 
               class="clear-all-btn"
               :disabled="key === 'package' ? zone.contents.length === 0 : (!zone.items || zone.items.length === 0)"
             >
-              Clear All
+              全削除
             </button>
           </div>
 
           <div v-if="key === 'package'" class="package-content-display">
-            <h4>Detected Plugins</h4>
+            <h4>検出されたプラグイン</h4>
             <div v-if="hasPlugins(zone)" class="plugin-grid">
               <div v-for="(plugins, category) in zone.plugins.agent_plugins" :key="'agent-' + category">
                 <div v-for="pluginName in plugins" :key="pluginName" class="plugin-card">
@@ -315,9 +315,9 @@ const handleDeletePlugin = async (pluginType, category, pluginName) => {
                 </div>
               </div>
             </div>
-            <div v-else class="empty-list">No plugins detected.</div>
+            <div v-else class="empty-list">プラグインは検出されませんでした。</div>
 
-            <h4 class="sub-header">Package Contents</h4>
+            <h4 class="sub-header">パッケージ内容</h4>
             <div class="file-list">
               <ul v-if="zone.contents.length > 0">
                 <li v-for="item in zone.contents" :key="item">
@@ -326,13 +326,13 @@ const handleDeletePlugin = async (pluginType, category, pluginName) => {
                   <button @click="handleDeleteItem('package', item)" class="delete-item-btn" title="Delete">×</button>
                 </li>
               </ul>
-              <div v-else class="empty-list">No other files found.</div>
+              <div v-else class="empty-list">他のファイルはありません。</div>
             </div>
           </div>
 
           <div v-else class="file-list">
             <div v-if="!zone.items || zone.items.length === 0" class="empty-list">
-              No data files found.
+              データファイルはありません。
             </div>
             <ul v-else>
               <li v-for="item in zone.items" :key="item">

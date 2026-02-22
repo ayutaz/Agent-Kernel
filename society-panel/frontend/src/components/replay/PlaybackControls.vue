@@ -10,7 +10,7 @@ const speeds = [0.5, 1, 2, 4]
 <template>
   <div class="panel-container playback-panel">
     <div class="controls-row">
-      <button class="ctrl-btn" @click="replayStore.stepBackward()" title="Previous frame">
+      <button class="ctrl-btn" @click="replayStore.stepBackward()" title="前のフレーム">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="11,17 6,12 11,7" />
           <line x1="18" y1="12" x2="6" y2="12" />
@@ -20,7 +20,7 @@ const speeds = [0.5, 1, 2, 4]
       <button
         class="ctrl-btn ctrl-btn--play"
         @click="replayStore.togglePlayPause()"
-        :title="replayStore.isPlaying ? 'Pause' : 'Play'"
+        :title="replayStore.isPlaying ? '一時停止' : '再生'"
       >
         <svg v-if="!replayStore.isPlaying" viewBox="0 0 24 24" fill="currentColor">
           <polygon points="6,4 20,12 6,20" />
@@ -31,14 +31,14 @@ const speeds = [0.5, 1, 2, 4]
         </svg>
       </button>
 
-      <button class="ctrl-btn" @click="replayStore.stepForward()" title="Next frame">
+      <button class="ctrl-btn" @click="replayStore.stepForward()" title="次のフレーム">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
           <polyline points="13,7 18,12 13,17" />
           <line x1="6" y1="12" x2="18" y2="12" />
         </svg>
       </button>
 
-      <button class="ctrl-btn" @click="replayStore.stop()" title="Stop">
+      <button class="ctrl-btn" @click="replayStore.stop()" title="停止">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <rect x="6" y="6" width="12" height="12" rx="1" />
         </svg>
@@ -46,7 +46,7 @@ const speeds = [0.5, 1, 2, 4]
     </div>
 
     <div class="speed-row">
-      <span class="speed-label">Speed</span>
+      <span class="speed-label">速度</span>
       <button
         v-for="s in speeds"
         :key="s"

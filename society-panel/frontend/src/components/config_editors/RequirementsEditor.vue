@@ -1,18 +1,18 @@
 <!-- Editor for requirements.txt file to manage Python dependencies. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="isLoading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="content !== null">
       <div class="form-group">
-        <label for="requirements-content">File Content (one package per line)</label>
+        <label for="requirements-content">ファイル内容 (1行に1パッケージ)</label>
         <textarea id="requirements-content" v-model="content" rows="15"></textarea>
       </div>
 
       <div class="actions">
         <button @click="save" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save requirements.txt' }}
+          {{ isSaving ? '保存中...' : 'requirements.txt を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

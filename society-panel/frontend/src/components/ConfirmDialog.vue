@@ -5,17 +5,17 @@ import { ref } from 'vue';
 const isVisible = ref(false);
 const title = ref('');
 const message = ref('');
-const confirmText = ref('Confirm');
-const cancelText = ref('Cancel');
+const confirmText = ref('確認');
+const cancelText = ref('キャンセル');
 const isDanger = ref(false);
 
 let resolvePromise = null;
 
 const show = (options) => {
-  title.value = options.title || 'Confirm';
-  message.value = options.message || 'Are you sure?';
-  confirmText.value = options.confirmText || 'Confirm';
-  cancelText.value = options.cancelText || 'Cancel';
+  title.value = options.title || '確認';
+  message.value = options.message || 'よろしいですか？';
+  confirmText.value = options.confirmText || '確認';
+  cancelText.value = options.cancelText || 'キャンセル';
   isDanger.value = options.isDanger !== undefined ? options.isDanger : true;
   isVisible.value = true;
 

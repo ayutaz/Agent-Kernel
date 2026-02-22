@@ -20,11 +20,11 @@ const themeStore = useThemeStore()
         </div>
       </div>
       <nav class="ak-nav__links">
-        <RouterLink class="ak-link" to="/">Dashboard</RouterLink>
-        <RouterLink class="ak-link" to="/map">Agent Map</RouterLink>
-        <RouterLink class="ak-link" to="/replay">Replay</RouterLink>
-        <RouterLink class="ak-link" to="/files">File Management</RouterLink>
-        <RouterLink class="ak-link" to="/configs">Configuration</RouterLink>
+        <RouterLink class="ak-link" to="/">ダッシュボード</RouterLink>
+        <RouterLink class="ak-link" to="/map">エージェントマップ</RouterLink>
+        <RouterLink class="ak-link" to="/replay">録画再生</RouterLink>
+        <RouterLink class="ak-link" to="/files">ファイル管理</RouterLink>
+        <RouterLink class="ak-link" to="/configs">設定</RouterLink>
       </nav>
       <div class="ak-nav__actions">
         <button
@@ -32,7 +32,7 @@ const themeStore = useThemeStore()
           class="theme-toggle"
           :class="{ 'theme-toggle--dark': themeStore.isDark }"
           @click="themeStore.toggleTheme"
-          :title="themeStore.isDark ? 'Switch to light theme' : 'Switch to dark theme'"
+          :title="themeStore.isDark ? 'ライトテーマに切替' : 'ダークテーマに切替'"
         >
           <svg v-if="!themeStore.isDark" class="theme-toggle__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>

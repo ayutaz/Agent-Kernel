@@ -13,7 +13,7 @@ const selectedAgent = computed(() => {
 
 <template>
   <div class="panel-container detail-panel">
-    <h3>Agent Detail</h3>
+    <h3>エージェント詳細</h3>
     <div v-if="selectedAgent" class="agent-info">
       <div class="info-row">
         <span class="info-label">ID</span>
@@ -29,7 +29,7 @@ const selectedAgent = computed(() => {
       </div>
     </div>
     <div v-else class="placeholder">
-      <p>Click an agent on the map to view details.</p>
+      <p>マップ上のエージェントをクリックすると詳細が表示されます。</p>
     </div>
   </div>
 </template>

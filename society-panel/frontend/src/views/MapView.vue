@@ -19,27 +19,27 @@ onUnmounted(() => {
 <template>
   <div class="map-view">
     <div class="page-header">
-      <h1>Agent Map</h1>
-      <p>Real-time visualization of agent positions in the simulation space.</p>
+      <h1>エージェントマップ</h1>
+      <p>シミュレーション空間におけるエージェント位置のリアルタイム表示。</p>
     </div>
 
     <div class="map-grid">
       <div class="main-panel">
         <div class="panel-container map-panel">
           <div class="map-header">
-            <h3>Map View</h3>
+            <h3>マップビュー</h3>
             <div class="map-meta">
               <span v-if="mapStore.status === 'ok'" class="meta-chip meta-chip--ok">
                 Tick {{ mapStore.currentTick ?? '-' }}
               </span>
               <span v-else-if="mapStore.status === 'not_running'" class="meta-chip meta-chip--idle">
-                Not Running
+                停止中
               </span>
               <span v-else class="meta-chip meta-chip--error">
-                Error
+                エラー
               </span>
               <span class="meta-chip">
-                {{ mapStore.agentCount }} agents
+                {{ mapStore.agentCount }} エージェント
               </span>
             </div>
           </div>
@@ -49,13 +49,13 @@ onUnmounted(() => {
           </div>
           <div v-else class="map-placeholder">
             <p v-if="mapStore.status === 'not_running'">
-              Start a simulation from the Dashboard to see agent positions.
+              ダッシュボードからシミュレーションを開始すると、エージェントの位置が表示されます。
             </p>
             <p v-else-if="mapStore.status === 'error'">
-              Failed to fetch agent positions. Check the backend connection.
+              エージェント位置の取得に失敗しました。バックエンド接続を確認してください。
             </p>
             <p v-else>
-              Waiting for agent data...
+              エージェントデータを待機中...
             </p>
           </div>
         </div>

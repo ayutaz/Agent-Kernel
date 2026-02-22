@@ -1,29 +1,29 @@
 <!-- Editor for core simulation parameters, module configs, and data paths. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading configuration...</div>
+    <div v-if="isLoading" class="loading">設定を読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData">
       <div class="form-grid">
         <div class="form-group">
-          <label for="pod-size">Pod Size</label>
+          <label for="pod-size">ポッドサイズ</label>
           <input id="pod-size" type="number" v-model.number="configData.simulation.pod_size" />
-          <small>Maximum number of agents per pod.</small>
+          <small>ポッドあたりの最大エージェント数。</small>
         </div>
         <div class="form-group">
-          <label for="init-batch-size">Init Batch Size</label>
+          <label for="init-batch-size">初期バッチサイズ</label>
           <input id="init-batch-size" type="number" v-model.number="configData.simulation.init_batch_size" />
-          <small>Number of agents to create in each initialization batch.</small>
+          <small>各初期化バッチで作成するエージェント数。</small>
         </div>
         <div class="form-group">
-          <label for="max-ticks">Max Ticks</label>
+          <label for="max-ticks">最大Tick数</label>
           <input id="max-ticks" type="number" v-model.number="configData.simulation.max_ticks" />
-          <small>The maximum number of time steps for the simulation to run.</small>
+          <small>シミュレーションを実行する最大タイムステップ数。</small>
         </div>
       </div>
 
-      <h4 class="sub-header">Module Config Paths</h4>
+      <h4 class="sub-header">モジュール設定パス</h4>
       <div class="form-grid path-grid">
         <div v-for="(path, key) in configData.configs" :key="key" class="form-group">
           <label :for="`config-path-${key}`">{{ key }}</label>
@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      <h4 class="sub-header">Data Source Paths</h4>
+      <h4 class="sub-header">データソースパス</h4>
       <div class="form-grid path-grid">
         <div v-for="(path, key) in configData.data" :key="key" class="form-group">
           <label :for="`data-path-${key}`">{{ key }}</label>
@@ -41,7 +41,7 @@
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save Simulation Config' }}
+          {{ isSaving ? '保存中...' : 'シミュレーション設定を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

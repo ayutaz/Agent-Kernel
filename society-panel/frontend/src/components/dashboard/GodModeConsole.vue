@@ -1,16 +1,16 @@
 <!-- Console for executing PodManager commands with parameter input and response display. -->
 <template>
   <div class="panel-container">
-    <h3>God Mode Console</h3>
-    <div v-if="isCommandsLoading" class="loading-small">Loading commands...</div>
+    <h3>ゴッドモード コンソール</h3>
+    <div v-if="isCommandsLoading" class="loading-small">コマンド読み込み中...</div>
     <div v-else-if="commandsError" class="message error">{{ commandsError }}</div>
 
     <div v-else>
       <div class="form-group">
-        <label for="command">Command (PodManager Method)</label>
+        <label for="command">コマンド (PodManager メソッド)</label>
         <div class="custom-select" :class="{ 'is-open': isDropdownOpen }">
           <div class="custom-select__trigger" @click="toggleDropdown">
-            <span class="custom-select__value">{{ command || '-- Select a command --' }}</span>
+            <span class="custom-select__value">{{ command || '-- コマンドを選択 --' }}</span>
             <svg class="custom-select__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -20,7 +20,7 @@
               <input 
                 type="text" 
                 v-model="searchQuery" 
-                placeholder="Search commands..."
+                placeholder="コマンド検索..."
                 @click.stop
                 ref="searchInput"
               />
@@ -36,7 +36,7 @@
                 {{ cmd.name }}
               </div>
               <div v-if="filteredCommands.length === 0" class="custom-select__empty">
-                No commands found
+                コマンドが見つかりません
               </div>
             </div>
           </div>
@@ -46,25 +46,25 @@
       <div v-if="selectedCommandInfo" class="command-info">
         <p class="docstring">{{ selectedCommandInfo.doc }}</p>
         <div v-if="filteredParameters.length > 0" class="params-hint">
-          <strong>Parameters:</strong>
+          <strong>パラメータ:</strong>
           <ul>
             <li v-for="param in filteredParameters" :key="param.name">
               <code>{{ param.name }}</code> ({{ param.type }}) -
-              <span v-if="param.default !== 'required'">Default: <code>{{ param.default }}</code></span>
-              <span v-else class="required">Required</span>
+              <span v-if="param.default !== 'required'">デフォルト: <code>{{ param.default }}</code></span>
+              <span v-else class="required">必須</span>
             </li>
           </ul>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="params">Parameters (JSON)</label>
+        <label for="params">パラメータ (JSON)</label>
         <textarea id="params" v-model="params" rows="10"></textarea>
       </div>
-      <button @click="execute" :disabled="isLoading || !command" class="btn-primary">Execute Command</button>
+      <button @click="execute" :disabled="isLoading || !command" class="btn-primary">コマンド実行</button>
       <div v-if="message" :class="['message', messageType]">{{ message }}</div>
       <div v-if="response" class="response-box">
-        <strong>Response:</strong>
+        <strong>レスポンス:</strong>
         <pre>{{ response }}</pre>
       </div>
     </div>
@@ -148,7 +148,7 @@ const loadCommands = async () => {
     const res = await axios.get('http://localhost:8001/api/simulation/commands');
     commands.value = res.data;
   } catch (err) {
-    commandsError.value = `Failed to load commands: ${err.response?.data?.detail || err.message}`;
+    commandsError.value = `コマンドの読み込みに失敗: ${err.response?.data?.detail || err.message}`;
   } finally {
     isCommandsLoading.value = false;
   }
@@ -195,7 +195,7 @@ const execute = async () => {
   try {
     parsedParams = JSON.parse(params.value);
   } catch (e) {
-    message.value = 'Invalid JSON in parameters.';
+    message.value = 'パラメータのJSONが無効です。';
     messageType.value = 'error';
     isLoading.value = false;
     return;
@@ -206,11 +206,11 @@ const execute = async () => {
       command: command.value,
       params: parsedParams,
     });
-    message.value = 'Command executed successfully.';
+    message.value = 'コマンドが正常に実行されました。';
     messageType.value = 'success';
     response.value = JSON.stringify(res.data.result, null, 2);
   } catch (err) {
-    message.value = `Execution failed: ${err.response?.data?.detail || err.message}`;
+    message.value = `実行に失敗: ${err.response?.data?.detail || err.message}`;
     messageType.value = 'error';
   } finally {
     isLoading.value = false;

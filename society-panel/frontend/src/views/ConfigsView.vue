@@ -15,14 +15,14 @@ const isLoading = ref(true);
 const error = ref('');
 
 const configSections = [
-  { id: 'agents', title: 'Agent Templates', component: AgentsConfigEditor, props: { configName: 'agents_config.yaml' } },
-  { id: 'actions', title: 'Action Settings', component: PluginBasedConfigEditor, props: { configName: 'actions_config.yaml', configType: 'action' } },
-  { id: 'environment', title: 'Environment Settings', component: PluginBasedConfigEditor, props: { configName: 'environment_config.yaml', configType: 'environment' } },
-  { id: 'models', title: 'Model Providers', component: ModelsConfigEditor, props: {} },
-  { id: 'database', title: 'Database Settings', component: DatabaseConfigEditor, props: {} },
-  { id: 'system', title: 'System Settings', component: SystemConfigEditor, props: {} },
-  { id: 'simulation', title: 'Simulation Settings', component: SimulationConfigEditor, props: {} },
-  { id: 'requirements', title: 'Python Dependencies', component: RequirementsEditor, props: {} },
+  { id: 'agents', title: 'エージェントテンプレート', component: AgentsConfigEditor, props: { configName: 'agents_config.yaml' } },
+  { id: 'actions', title: 'アクション設定', component: PluginBasedConfigEditor, props: { configName: 'actions_config.yaml', configType: 'action' } },
+  { id: 'environment', title: '環境設定', component: PluginBasedConfigEditor, props: { configName: 'environment_config.yaml', configType: 'environment' } },
+  { id: 'models', title: 'モデルプロバイダー', component: ModelsConfigEditor, props: {} },
+  { id: 'database', title: 'データベース設定', component: DatabaseConfigEditor, props: {} },
+  { id: 'system', title: 'システム設定', component: SystemConfigEditor, props: {} },
+  { id: 'simulation', title: 'シミュレーション設定', component: SimulationConfigEditor, props: {} },
+  { id: 'requirements', title: 'Python依存関係', component: RequirementsEditor, props: {} },
 ];
 
 const activeConfig = ref(configSections[0].id);
@@ -50,11 +50,11 @@ onMounted(async () => {
 <template>
   <div class="configs-view">
     <div class="page-header">
-      <h1>Configuration</h1>
-      <p>Edit simulation parameters. Changes are saved to the respective YAML files in the workspace.</p>
+      <h1>設定</h1>
+      <p>シミュレーションパラメータを編集します。変更はワークスペース内のYAMLファイルに保存されます。</p>
     </div>
 
-    <div v-if="isLoading" class="loading">Loading plugin information...</div>
+    <div v-if="isLoading" class="loading">プラグイン情報を読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-else class="config-layout">

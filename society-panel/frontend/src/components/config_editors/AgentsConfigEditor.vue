@@ -1,36 +1,36 @@
 <!-- Editor for agent templates configuration with plugin selection and parameter management. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading data...</div>
+    <div v-if="isLoading" class="loading">データを読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData && availablePlugins">
       <div v-for="(template, templateIndex) in configData.templates" :key="template.name" class="template-section">
         <div class="template-header">
-          <h3>Template: {{ template.name }}</h3>
-          <button @click="removeTemplate(templateIndex)" class="remove-btn">Remove Template</button>
+          <h3>テンプレート: {{ template.name }}</h3>
+          <button @click="removeTemplate(templateIndex)" class="remove-btn">テンプレート削除</button>
         </div>
 
         <div class="form-grid">
           <div class="form-group">
-            <label>Template Name</label>
+            <label>テンプレート名</label>
             <input type="text" v-model="template.name" />
           </div>
           <div class="form-group">
-            <label>Component Order</label>
+            <label>コンポーネント実行順序</label>
             <input type="text" :value="Array.isArray(template.component_order) ? template.component_order.join(',') : template.component_order" @input="updateComponentOrder(template, $event.target.value)" placeholder="e.g., perceive,plan,act" />
-            <small>Comma-separated list of component execution order.</small>
+            <small>コンポーネントの実行順序をカンマ区切りで指定。</small>
           </div>
         </div>
 
         <div class="components-grid">
           <div v-for="(component, componentName) in template.components" :key="componentName" class="component-card">
-            <h4>Component: <code>{{ componentName }}</code></h4>
+            <h4>コンポーネント: <code>{{ componentName }}</code></h4>
 
             <div class="form-group">
-              <label>Plugin</label>
+              <label>プラグイン</label>
               <select :value="getCurrentPluginName(component)" @change="onPluginChange(component, componentName, $event.target.value)">
-                <option disabled value="">Select a plugin</option>
+                <option disabled value="">プラグインを選択</option>
                 <option v-for="plugin in availablePlugins.agent_plugins[componentName]" :key="plugin" :value="plugin">
                   {{ plugin }}
                 </option>
@@ -41,12 +41,12 @@
               <div v-for="(paramValue, paramKey) in getCurrentPluginConfig(component)" :key="paramKey" class="form-group with-delete">
                 <label>{{ paramKey }}</label>
                 <input type="text" :value="formatParamValue(paramValue)" @input="updatePluginParam(component, paramKey, $event.target.value)" />
-                <button @click="removePluginParam(component, paramKey)" class="delete-field-btn" title="Remove parameter">×</button>
+                <button @click="removePluginParam(component, paramKey)" class="delete-field-btn" title="パラメータを削除">×</button>
               </div>
               <div class="add-field-section">
-                <input type="text" v-model="newParam[template.name][componentName].key" placeholder="New parameter name">
-                <input type="text" v-model="newParam[template.name][componentName].value" placeholder="Value">
-                <button @click="addPluginParam(component, template.name, componentName)">Add</button>
+                <input type="text" v-model="newParam[template.name][componentName].key" placeholder="新規パラメータ名">
+                <input type="text" v-model="newParam[template.name][componentName].value" placeholder="値">
+                <button @click="addPluginParam(component, template.name, componentName)">追加</button>
               </div>
             </div>
           </div>
@@ -54,13 +54,13 @@
       </div>
 
       <div class="add-section">
-        <input type="text" v-model="newTemplateName" placeholder="New template name">
-        <button @click="addTemplate" :disabled="!newTemplateName">Add New Template</button>
+        <input type="text" v-model="newTemplateName" placeholder="新規テンプレート名">
+        <button @click="addTemplate" :disabled="!newTemplateName">新規テンプレート追加</button>
       </div>
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save Agents Config' }}
+          {{ isSaving ? '保存中...' : 'エージェント設定を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

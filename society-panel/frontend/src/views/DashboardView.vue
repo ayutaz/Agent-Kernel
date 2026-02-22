@@ -17,8 +17,8 @@ const handleSimulationStarted = () => {
 <template>
   <div class="dashboard-view">
     <div class="page-header">
-      <h1>Simulation Dashboard</h1>
-      <p>Control the simulation lifecycle, send commands, and monitor real-time events.</p>
+      <h1>シミュレーション ダッシュボード</h1>
+      <p>シミュレーションのライフサイクル制御、コマンド送信、リアルタイムイベント監視を行います。</p>
     </div>
 
     <div class="dashboard-grid">

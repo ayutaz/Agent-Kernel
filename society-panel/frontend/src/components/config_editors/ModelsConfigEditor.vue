@@ -1,47 +1,47 @@
 <!-- Editor for model providers configuration. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="isLoading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData">
       <div v-for="(model, index) in configData" :key="index" class="model-section">
         <div class="model-header">
-          <h4>Model Provider {{ index + 1 }}</h4>
-          <button @click="removeModel(index)" class="remove-btn">Remove</button>
+          <h4>モデルプロバイダー {{ index + 1 }}</h4>
+          <button @click="removeModel(index)" class="remove-btn">削除</button>
         </div>
         <div class="form-grid">
           <div class="form-group">
-            <label>Name</label>
+            <label>名前</label>
             <input type="text" v-model="model.name" />
           </div>
           <div class="form-group">
-            <label>Model</label>
+            <label>モデル</label>
             <input type="text" v-model="model.model" />
           </div>
           <div class="form-group full-width">
-            <label>Base URL</label>
+            <label>ベースURL</label>
             <input type="text" v-model="model.base_url" />
           </div>
           <div class="form-group full-width">
-            <label>API Key</label>
-            <input type="password" v-model="model.api_key" placeholder="Leave blank if not needed" />
+            <label>APIキー</label>
+            <input type="password" v-model="model.api_key" placeholder="不要な場合は空欄" />
           </div>
           <div class="form-group">
-            <label>Capabilities</label>
+            <label>機能</label>
             <input type="text" v-model="model.capabilities" placeholder="e.g., chat,embedding" />
-            <small>Comma-separated list.</small>
+            <small>カンマ区切りリスト。</small>
           </div>
         </div>
       </div>
 
       <div class="add-section">
-        <button @click="addModel">Add New Model Provider</button>
+        <button @click="addModel">新規モデルプロバイダー追加</button>
       </div>
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save Models Config' }}
+          {{ isSaving ? '保存中...' : 'モデル設定を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

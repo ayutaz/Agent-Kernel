@@ -13,8 +13,8 @@ onMounted(() => {
 <template>
   <div class="panel-container recording-list-panel">
     <div class="list-header">
-      <h3>Recordings</h3>
-      <button class="refresh-btn" @click="replayStore.fetchRecordings()" title="Refresh">
+      <h3>録画一覧</h3>
+      <button class="refresh-btn" @click="replayStore.fetchRecordings()" title="更新">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="23,4 23,10 17,10" />
           <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
@@ -23,11 +23,11 @@ onMounted(() => {
     </div>
 
     <div v-if="replayStore.loadingList" class="placeholder">
-      <p>Loading...</p>
+      <p>読み込み中...</p>
     </div>
 
     <div v-else-if="replayStore.recordings.length === 0" class="placeholder">
-      <p>No recordings found. Run a simulation to generate one.</p>
+      <p>録画が見つかりません。シミュレーションを実行すると自動生成されます。</p>
     </div>
 
     <ul v-else class="recording-items">
@@ -41,14 +41,14 @@ onMounted(() => {
         <div class="rec-info">
           <span class="rec-name">{{ rec.filename }}</span>
           <span class="rec-meta" v-if="!rec.error">
-            {{ rec.total_ticks_recorded ?? '?' }} ticks / {{ rec.agent_count ?? '?' }} agents
+            {{ rec.total_ticks_recorded ?? '?' }} ティック / {{ rec.agent_count ?? '?' }} エージェント
           </span>
           <span class="rec-meta rec-meta--error" v-else>{{ rec.error }}</span>
         </div>
         <button
           class="delete-btn"
           @click.stop="replayStore.deleteRecording(rec.filename)"
-          title="Delete"
+          title="削除"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="3,6 5,6 21,6" />

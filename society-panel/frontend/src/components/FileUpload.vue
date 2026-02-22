@@ -1,19 +1,19 @@
 <!-- File upload component with directory targeting and drag-drop support. -->
 <template>
   <div class="upload-container">
-    <h3>Upload Custom Files</h3>
+    <h3>カスタムファイルのアップロード</h3>
     <div class="form-group">
-      <label for="target-dir">Target Directory:</label>
+      <label for="target-dir">保存先ディレクトリ:</label>
       <input
         type="text"
         id="target-dir"
         v-model="targetDir"
         placeholder="e.g., plugins/agent/profile"
       />
-      <small>Path relative to workspace root. E.g., `plugins/action/other` or `.` for root.</small>
+      <small>ワークスペースルートからの相対パス。例: `plugins/action/other` またはルートの場合は `.`</small>
     </div>
     <div class="form-group">
-      <label for="file-input">Select Files:</label>
+      <label for="file-input">ファイルを選択:</label>
       <input
         type="file"
         id="file-input"
@@ -22,7 +22,7 @@
       />
     </div>
     <button @click="handleUpload" :disabled="!files.length || !targetDir || isLoading">
-      {{ isLoading ? 'Uploading...' : 'Upload' }}
+      {{ isLoading ? 'アップロード中...' : 'アップロード' }}
     </button>
     <div v-if="message" :class="['message', messageType]">
       {{ message }}
@@ -46,7 +46,7 @@ const handleFileChange = (event) => {
 
 const handleUpload = async () => {
   if (!files.value.length || !targetDir.value) {
-    message.value = 'Please select files and specify a target directory.';
+    message.value = 'ファイルと保存先ディレクトリを指定してください。';
     messageType.value = 'error';
     return;
   }
@@ -69,7 +69,7 @@ const handleUpload = async () => {
     message.value = response.data.message;
     messageType.value = 'success';
   } catch (error) {
-    message.value = error.response?.data?.detail || 'An error occurred during upload.';
+    message.value = error.response?.data?.detail || 'アップロード中にエラーが発生しました。';
     messageType.value = 'error';
   } finally {
     isLoading.value = false;

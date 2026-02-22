@@ -1,18 +1,18 @@
 <!-- Control panel for starting, stopping simulation and regenerating registry. -->
 <template>
   <div class="panel-container">
-    <h3>Simulation Control</h3>
+    <h3>シミュレーション制御</h3>
     <div class="status-bar">
-      <span>Status:</span>
+      <span>ステータス:</span>
       <span :class="['status-indicator', status]">
         <span class="status-dot"></span>
         {{ status }}
       </span>
     </div>
     <div class="actions">
-      <button @click="start" :disabled="isLoading || status === 'running'" class="btn-primary">Start</button>
-      <button @click="stop" :disabled="isLoading || status === 'stopped' || status === 'error'" class="btn-danger">Stop</button>
-      <button @click="generateRegistry" :disabled="isLoading" class="btn-secondary">Regenerate Registry</button>
+      <button @click="start" :disabled="isLoading || status === 'running'" class="btn-primary">開始</button>
+      <button @click="stop" :disabled="isLoading || status === 'stopped' || status === 'error'" class="btn-danger">停止</button>
+      <button @click="generateRegistry" :disabled="isLoading" class="btn-secondary">レジストリ再生成</button>
     </div>
     <div v-if="message" :class="['message', messageType]">{{ message }}</div>
   </div>
@@ -48,28 +48,28 @@ const fetchStatus = async () => {
 
   } catch (err) {
     status.value = 'error';
-    message.value = 'Failed to connect to backend.';
+    message.value = 'バックエンドへの接続に失敗しました。';
     messageType.value = 'error';
   }
 };
 
 const start = async () => {
   isLoading.value = true;
-  message.value = 'Starting simulation... This may take a moment.';
+  message.value = 'シミュレーションを開始しています... しばらくお待ちください。';
   messageType.value = 'info';
   try {
     await axios.post('http://localhost:8001/api/simulation/start');
     await fetchStatus();
     if (status.value === 'running') {
-        message.value = 'Simulation started successfully.';
+        message.value = 'シミュレーションが正常に開始されました。';
         messageType.value = 'success';
         emit('simulation-started');
     } else if (status.value !== 'error') {
-        message.value = 'Simulation is starting...';
+        message.value = 'シミュレーション起動中...';
         messageType.value = 'info';
     }
   } catch (err) {
-    message.value = `Failed to start: ${err.response?.data?.detail || err.message}`;
+    message.value = `開始に失敗: ${err.response?.data?.detail || err.message}`;
     messageType.value = 'error';
     await fetchStatus();
   } finally {
@@ -79,15 +79,15 @@ const start = async () => {
 
 const stop = async () => {
   isLoading.value = true;
-  message.value = 'Stopping simulation...';
+  message.value = 'シミュレーションを停止しています...';
   messageType.value = 'info';
   try {
     await axios.post('http://localhost:8001/api/simulation/stop');
     await fetchStatus();
-    message.value = 'Simulation stopped.';
+    message.value = 'シミュレーションが停止しました。';
     messageType.value = 'success';
   } catch (err) {
-    message.value = `Failed to stop: ${err.response?.data?.detail || err.message}`;
+    message.value = `停止に失敗: ${err.response?.data?.detail || err.message}`;
     messageType.value = 'error';
     await fetchStatus();
   } finally {
@@ -97,14 +97,14 @@ const stop = async () => {
 
 const generateRegistry = async () => {
   isLoading.value = true;
-  message.value = 'Regenerating registry.py...';
+  message.value = 'registry.py を再生成しています...';
   messageType.value = 'info';
   try {
     const response = await axios.post('http://localhost:8001/api/registry/generate');
     message.value = response.data.message;
     messageType.value = 'success';
   } catch (err) {
-    message.value = `Failed to regenerate registry: ${err.response?.data?.detail || err.message}`;
+    message.value = `レジストリの再生成に失敗: ${err.response?.data?.detail || err.message}`;
     messageType.value = 'error';
   } finally {
     isLoading.value = false;

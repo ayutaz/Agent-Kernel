@@ -1,15 +1,15 @@
 <!-- Editor for database connection pools and adapters configuration. -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="isLoading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData">
-      <h3>Connection Pools</h3>
+      <h3>接続プール</h3>
       <div v-for="(pool, poolName) in configData.pools" :key="poolName" class="config-section">
         <div class="section-header">
-          <h4>Pool: <code>{{ poolName }}</code></h4>
-          <button @click="removeTopLevelKey('pools', poolName)" class="remove-btn">Remove</button>
+          <h4>プール: <code>{{ poolName }}</code></h4>
+          <button @click="removeTopLevelKey('pools', poolName)" class="remove-btn">削除</button>
         </div>
         <div class="form-grid">
           <div class="form-group">
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="sub-section">
-          <h5>Settings</h5>
+          <h5>設定</h5>
           <div class="form-grid settings-grid">
             <div v-for="(value, key) in pool.settings" :key="key" class="form-group with-delete">
               <label>{{ key }}</label>
@@ -30,13 +30,13 @@
             </div>
           </div>
           <div class="add-field-section">
-            <input type="text" v-model="newField.pools[poolName].settings.key" placeholder="New field name">
-            <input type="text" v-model="newField.pools[poolName].settings.value" placeholder="Value">
-            <button @click="addNestedKey(pool.settings, newField.pools[poolName].settings)">Add Field</button>
+            <input type="text" v-model="newField.pools[poolName].settings.key" placeholder="新規フィールド名">
+            <input type="text" v-model="newField.pools[poolName].settings.value" placeholder="値">
+            <button @click="addNestedKey(pool.settings, newField.pools[poolName].settings)">フィールド追加</button>
           </div>
         </div>
         <div class="sub-section">
-          <h5>Pool Settings</h5>
+          <h5>プール設定</h5>
           <div class="form-grid settings-grid">
             <div v-for="(value, key) in pool.pool_settings" :key="key" class="form-group with-delete">
               <label>{{ key }}</label>
@@ -45,34 +45,34 @@
             </div>
           </div>
            <div class="add-field-section">
-            <input type="text" v-model="newField.pools[poolName].pool_settings.key" placeholder="New field name">
-            <input type="text" v-model="newField.pools[poolName].pool_settings.value" placeholder="Value">
-            <button @click="addNestedKey(pool.pool_settings, newField.pools[poolName].pool_settings)">Add Field</button>
+            <input type="text" v-model="newField.pools[poolName].pool_settings.key" placeholder="新規フィールド名">
+            <input type="text" v-model="newField.pools[poolName].pool_settings.value" placeholder="値">
+            <button @click="addNestedKey(pool.pool_settings, newField.pools[poolName].pool_settings)">フィールド追加</button>
           </div>
         </div>
       </div>
       <div class="add-section">
-        <input type="text" v-model="newPoolName" placeholder="New pool name">
-        <button @click="addPool" :disabled="!newPoolName">Add New Pool</button>
+        <input type="text" v-model="newPoolName" placeholder="新規プール名">
+        <button @click="addPool" :disabled="!newPoolName">新規プール追加</button>
       </div>
 
-      <h3 style="margin-top: 2.5rem;">Adapters</h3>
+      <h3 style="margin-top: 2.5rem;">アダプター</h3>
       <div v-for="(adapter, adapterName) in configData.adapters" :key="adapterName" class="config-section">
         <div class="section-header">
-          <h4>Adapter: <code>{{ adapterName }}</code></h4>
-          <button @click="removeTopLevelKey('adapters', adapterName)" class="remove-btn">Remove</button>
+          <h4>アダプター: <code>{{ adapterName }}</code></h4>
+          <button @click="removeTopLevelKey('adapters', adapterName)" class="remove-btn">削除</button>
         </div>
 
         <div v-if="'use_pool' in adapter" class="form-group">
           <label>use_pool</label>
           <select v-model="adapter.use_pool">
-            <option value="">-- None --</option>
+            <option value="">-- なし --</option>
             <option v-for="poolName in Object.keys(configData.pools)" :key="poolName" :value="poolName">{{ poolName }}</option>
           </select>
         </div>
 
         <div v-if="'settings' in adapter" class="sub-section">
-          <h5>Settings</h5>
+          <h5>設定</h5>
           <div class="form-grid settings-grid">
             <div v-for="(value, key) in adapter.settings" :key="key" class="form-group with-delete">
               <label>{{ key }}</label>
@@ -81,24 +81,24 @@
             </div>
           </div>
           <div class="add-field-section">
-            <input type="text" v-model="newField.adapters[adapterName].settings.key" placeholder="New field name">
-            <input type="text" v-model="newField.adapters[adapterName].settings.value" placeholder="Value">
-            <button @click="addNestedKey(adapter.settings, newField.adapters[adapterName].settings)">Add Field</button>
+            <input type="text" v-model="newField.adapters[adapterName].settings.key" placeholder="新規フィールド名">
+            <input type="text" v-model="newField.adapters[adapterName].settings.value" placeholder="値">
+            <button @click="addNestedKey(adapter.settings, newField.adapters[adapterName].settings)">フィールド追加</button>
           </div>
         </div>
       </div>
       <div class="add-section">
-        <input type="text" v-model="newAdapterName" placeholder="New adapter name">
+        <input type="text" v-model="newAdapterName" placeholder="新規アダプター名">
         <select v-model="newAdapterType">
-          <option value="pooled">Pooled</option>
-          <option value="standalone">Standalone</option>
+          <option value="pooled">プール接続</option>
+          <option value="standalone">スタンドアロン</option>
         </select>
-        <button @click="addAdapter" :disabled="!newAdapterName">Add New Adapter</button>
+        <button @click="addAdapter" :disabled="!newAdapterName">新規アダプター追加</button>
       </div>
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save Database Config' }}
+          {{ isSaving ? '保存中...' : 'データベース設定を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

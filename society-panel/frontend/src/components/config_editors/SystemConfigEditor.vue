@@ -1,17 +1,17 @@
 <!-- Editor for system components configuration (messager, timer, recorder). -->
 <template>
   <div class="config-editor-container">
-    <div v-if="isLoading" class="loading">Loading...</div>
+    <div v-if="isLoading" class="loading">読み込み中...</div>
     <div v-else-if="error" class="message error">{{ error }}</div>
 
     <div v-if="configData">
       <div class="form-group">
-        <label>Module Name</label>
+        <label>モジュール名</label>
         <input type="text" v-model="configData.name" />
       </div>
 
       <div class="component-section">
-        <h4>Component: <code>messager</code></h4>
+        <h4>コンポーネント: <code>messager</code></h4>
         <div class="form-grid">
           <div v-for="(value, key) in configData.components.messager" :key="key" class="form-group">
             <label>{{ key }}</label>
@@ -21,7 +21,7 @@
       </div>
 
       <div class="component-section">
-        <h4>Component: <code>timer</code></h4>
+        <h4>コンポーネント: <code>timer</code></h4>
         <div class="form-grid">
           <div v-for="(value, key) in configData.components.timer" :key="key" class="form-group">
             <label>{{ key }}</label>
@@ -31,7 +31,7 @@
       </div>
 
       <div class="component-section">
-        <h4>Component: <code>recorder</code></h4>
+        <h4>コンポーネント: <code>recorder</code></h4>
         <div class="form-grid">
           <div v-for="(value, key) in configData.components.recorder" :key="key" class="form-group">
             <label>{{ key }}</label>
@@ -42,7 +42,7 @@
 
       <div class="actions">
         <button @click="saveConfig" :disabled="isSaving">
-          {{ isSaving ? 'Saving...' : 'Save System Config' }}
+          {{ isSaving ? '保存中...' : 'システム設定を保存' }}
         </button>
         <div v-if="saveMessage" :class="['message', saveMessageType]">
           {{ saveMessage }}

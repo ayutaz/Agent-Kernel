@@ -2,11 +2,11 @@
 <template>
   <div class="log-panel panel-container">
     <div class="log-header">
-      <h3>Real-time Event Log</h3>
+      <h3>リアルタイム イベントログ</h3>
       <div class="header-filters">
         <div class="dropdown" ref="levelDropdownRef">
           <button class="dropdown-btn" @click.stop="toggleLevelDropdown">
-            <span class="dropdown-label">Level</span>
+            <span class="dropdown-label">レベル</span>
             <span class="dropdown-count" v-if="selectedLevels.length < logLevels.length">{{ selectedLevels.length }}</span>
             <span class="dropdown-arrow">▾</span>
           </button>
@@ -21,7 +21,7 @@
         
         <div class="dropdown" ref="categoryDropdownRef">
           <button class="dropdown-btn" @click.stop="toggleCategoryDropdown">
-            <span class="dropdown-label">Category</span>
+            <span class="dropdown-label">カテゴリ</span>
             <span class="dropdown-count" v-if="selectedCategoryCount < categories.length">{{ selectedCategoryCount }}</span>
             <span class="dropdown-arrow">▾</span>
           </button>
@@ -38,15 +38,15 @@
 
     <div class="log-actions">
       <button @click="toggleConnection" :class="['btn-toggle', connectionStatus]">
-        {{ isConnected ? 'Disconnect' : 'Connect' }}
+        {{ isConnected ? '切断' : '接続' }}
       </button>
-      <button @click="clearLogs" :disabled="!logs.length" class="btn-clear">Clear Logs</button>
+      <button @click="clearLogs" :disabled="!logs.length" class="btn-clear">ログクリア</button>
       
       <div class="search-box">
         <input 
           type="text" 
           v-model="searchQuery" 
-          placeholder="Search logs..."
+          placeholder="ログ検索..."
           class="search-input"
         />
         <span v-if="searchQuery" class="clear-search" @click="searchQuery = ''">×</span>
@@ -62,15 +62,15 @@
       </div>
       <div v-if="!filteredLogs.length" class="log-placeholder">
         <span class="placeholder-icon"><AppIcons name="connection" :size="64" /></span>
-        <p v-if="!isConnected">Connect to view real-time events</p>
-        <p v-else-if="logs.length">No logs match current filters</p>
-        <p v-else>Waiting for log entries...</p>
+        <p v-if="!isConnected">接続するとリアルタイムイベントが表示されます</p>
+        <p v-else-if="logs.length">現在のフィルタに一致するログはありません</p>
+        <p v-else>ログエントリを待機中...</p>
       </div>
     </div>
     
     <div class="log-stats" v-if="totalReceived">
-      <span>Total: {{ totalReceived }}</span>
-      <span>Showing: {{ filteredLogs.length }}</span>
+      <span>合計: {{ totalReceived }}</span>
+      <span>表示中: {{ filteredLogs.length }}</span>
     </div>
   </div>
 </template>
@@ -211,7 +211,7 @@ const connect = () => {
     logs.value.unshift({ 
       tick: 'SYS', 
       name: 'System', 
-      payload: 'Disconnected from log stream.', 
+      payload: 'ログストリームから切断されました。',
       category: 'system',
       level: 'INFO'
     });
@@ -226,7 +226,7 @@ const connect = () => {
     logs.value.unshift({ 
       tick: 'SYS', 
       name: 'System', 
-      payload: 'Connection error. Check if backend is running.', 
+      payload: '接続エラー。バックエンドが起動しているか確認してください。',
       category: 'system',
       level: 'ERROR'
     });
