@@ -3,6 +3,7 @@ Service for managing simulation lifecycle and execution.
 """
 
 import asyncio
+import json
 import os
 import sys
 import time
@@ -45,6 +46,11 @@ class SimulationManager:
 
         self.workspace_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "workspace"))
         os.makedirs(self.workspace_path, exist_ok=True)
+
+        self.recordings_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "recordings"))
+        os.makedirs(self.recordings_path, exist_ok=True)
+        self._recording_frames: list = []
+        self._recording_metadata: dict = {}
 
         self.decoupling_output_path = os.path.abspath(
             os.path.join(os.path.dirname(__file__), "..", "..", "decoupling_output")
@@ -157,6 +163,13 @@ class SimulationManager:
 
             self._status = SimulationStatus.RUNNING
 
+            self._recording_frames = []
+            self._recording_metadata = {
+                "created_at": datetime.now().isoformat(),
+                "max_ticks": max_ticks,
+                "map_size": 300,
+            }
+
             for i in range(max_ticks):
                 if self._status != SimulationStatus.RUNNING:
                     print(f"Simulation status changed to '{self._status}'. Exiting simulation loop.")
@@ -175,6 +188,16 @@ class SimulationManager:
 
                 print(f"--- Tick {current_tick} finished in {actual_tick_duration:.4f} seconds ---")
 
+                try:
+                    agents = await self._pod_manager.get_all_agent_positions.remote()
+                    self._recording_frames.append({
+                        "tick": current_tick,
+                        "timestamp": datetime.now().isoformat(),
+                        "agents": agents,
+                    })
+                except Exception as rec_err:
+                    print(f"Warning: Failed to record frame at tick {current_tick}: {rec_err}")
+
             print("\n--- Simulation Finished ---")
 
         except asyncio.CancelledError:
@@ -187,6 +210,22 @@ class SimulationManager:
             self._status = SimulationStatus.ERROR
             self._error_message = str(e)
         finally:
+            if self._recording_frames:
+                self._recording_metadata["total_ticks_recorded"] = len(self._recording_frames)
+                self._recording_metadata["agent_count"] = len(self._recording_frames[0].get("agents", []))
+                recording_data = {"metadata": self._recording_metadata, "frames": self._recording_frames}
+                recording_file = os.path.join(
+                    self.recordings_path,
+                    f"recording_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                )
+                try:
+                    with open(recording_file, "w", encoding="utf-8") as f:
+                        json.dump(recording_data, f, ensure_ascii=False)
+                    print(f"Recording saved: {recording_file}")
+                except Exception as e:
+                    print(f"Failed to save recording: {e}")
+                self._recording_frames = []
+
             print("Simulation loop finished. Triggering final cleanup.")
             await self.cleanup()
             self._status = SimulationStatus.STOPPED

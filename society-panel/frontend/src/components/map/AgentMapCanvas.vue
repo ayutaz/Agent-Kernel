@@ -4,6 +4,14 @@ import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import { useMapStore } from '../../stores/map'
 import { useThemeStore } from '../../stores/theme'
 
+const props = defineProps({
+  agentsOverride: { type: Array, default: null },
+  mapSizeOverride: { type: Number, default: null },
+  selectedAgentIdOverride: { type: String, default: null },
+  hoveredAgentIdOverride: { type: String, default: null },
+})
+const emit = defineEmits(['agent-click', 'agent-hover'])
+
 const mapStore = useMapStore()
 const themeStore = useThemeStore()
 
@@ -13,13 +21,20 @@ const canvasWidth = ref(600)
 const canvasHeight = ref(600)
 const tooltip = ref({ visible: false, x: 0, y: 0, text: '' })
 
-const scale = computed(() => canvasWidth.value / mapStore.mapSize)
+const effectiveAgents = computed(() => props.agentsOverride ?? mapStore.agents)
+const effectiveMapSize = computed(() => props.mapSizeOverride ?? mapStore.mapSize)
+const effectiveSelectedAgentId = computed(() =>
+  props.agentsOverride !== null ? props.selectedAgentIdOverride : mapStore.selectedAgentId)
+const effectiveHoveredAgentId = computed(() =>
+  props.agentsOverride !== null ? props.hoveredAgentIdOverride : mapStore.hoveredAgentId)
+
+const isOverrideMode = computed(() => props.agentsOverride !== null)
+
+const scale = computed(() => canvasWidth.value / effectiveMapSize.value)
 
 let resizeObserver = null
 
 function getColors() {
-  const el = document.documentElement
-  const style = getComputedStyle(el)
   const isDark = themeStore.isDark
 
   return {
@@ -51,6 +66,7 @@ function draw() {
 
   const colors = getColors()
   const s = scale.value
+  const mSize = effectiveMapSize.value
 
   // Background
   ctx.fillStyle = colors.bg
@@ -60,7 +76,7 @@ function draw() {
   ctx.strokeStyle = colors.grid
   ctx.lineWidth = 1
   const gridStep = 50
-  for (let i = 0; i <= mapStore.mapSize; i += gridStep) {
+  for (let i = 0; i <= mSize; i += gridStep) {
     const pos = i * s
     ctx.beginPath()
     ctx.moveTo(pos, 0)
@@ -77,7 +93,7 @@ function draw() {
   ctx.font = '10px monospace'
   ctx.textAlign = 'left'
   ctx.textBaseline = 'top'
-  for (let i = 0; i <= mapStore.mapSize; i += gridStep) {
+  for (let i = 0; i <= mSize; i += gridStep) {
     if (i === 0) continue
     const pos = i * s
     ctx.fillText(String(i), pos + 2, 2)
@@ -85,7 +101,9 @@ function draw() {
   }
 
   // Agent dots
-  const agents = mapStore.agents
+  const agents = effectiveAgents.value
+  const selId = effectiveSelectedAgentId.value
+  const hovId = effectiveHoveredAgentId.value
   for (const agent of agents) {
     const [ax, ay] = agent.position
     const cx = ax * s
@@ -94,10 +112,10 @@ function draw() {
     let radius = 4
     let fillColor = colors.dot
 
-    if (agent.id === mapStore.selectedAgentId) {
+    if (agent.id === selId) {
       fillColor = colors.dotSelected
       radius = 6
-    } else if (agent.id === mapStore.hoveredAgentId) {
+    } else if (agent.id === hovId) {
       fillColor = colors.dotHover
       radius = 5
     }
@@ -108,7 +126,7 @@ function draw() {
     ctx.fill()
 
     // Glow for selected
-    if (agent.id === mapStore.selectedAgentId) {
+    if (agent.id === selId) {
       ctx.beginPath()
       ctx.arc(cx, cy, 10, 0, Math.PI * 2)
       ctx.strokeStyle = fillColor
@@ -139,7 +157,7 @@ function findAgentAt(clientX, clientY) {
   let closest = null
   let closestDist = hitRadius
 
-  for (const agent of mapStore.agents) {
+  for (const agent of effectiveAgents.value) {
     const [ax, ay] = agent.position
     const cx = ax * s
     const cy = ay * s
@@ -156,7 +174,11 @@ function findAgentAt(clientX, clientY) {
 function onMouseMove(e) {
   const agent = findAgentAt(e.clientX, e.clientY)
   if (agent) {
-    mapStore.hoverAgent(agent.id)
+    if (isOverrideMode.value) {
+      emit('agent-hover', agent.id)
+    } else {
+      mapStore.hoverAgent(agent.id)
+    }
     const rect = canvasRef.value.getBoundingClientRect()
     tooltip.value = {
       visible: true,
@@ -165,24 +187,32 @@ function onMouseMove(e) {
       text: `${agent.id} (${agent.position[0]}, ${agent.position[1]})`
     }
   } else {
-    mapStore.hoverAgent(null)
+    if (isOverrideMode.value) {
+      emit('agent-hover', null)
+    } else {
+      mapStore.hoverAgent(null)
+    }
     tooltip.value.visible = false
   }
   draw()
 }
 
 function onMouseLeave() {
-  mapStore.hoverAgent(null)
+  if (isOverrideMode.value) {
+    emit('agent-hover', null)
+  } else {
+    mapStore.hoverAgent(null)
+  }
   tooltip.value.visible = false
   draw()
 }
 
 function onClick(e) {
   const agent = findAgentAt(e.clientX, e.clientY)
-  if (agent) {
-    mapStore.selectAgent(agent.id)
+  if (isOverrideMode.value) {
+    emit('agent-click', agent ? agent.id : null)
   } else {
-    mapStore.selectAgent(null)
+    mapStore.selectAgent(agent ? agent.id : null)
   }
   draw()
 }
@@ -210,8 +240,10 @@ onUnmounted(() => {
   }
 })
 
-watch(() => mapStore.agents, draw, { deep: true })
+watch(() => effectiveAgents.value, draw, { deep: true })
 watch(() => themeStore.isDark, draw)
+watch(() => effectiveSelectedAgentId.value, draw)
+watch(() => effectiveHoveredAgentId.value, draw)
 </script>
 
 <template>

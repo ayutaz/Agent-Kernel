@@ -5,6 +5,7 @@ import DashboardView from '../views/DashboardView.vue'
 import FilesView from '../views/FilesView.vue'
 import ConfigsView from '../views/ConfigsView.vue'
 import MapView from '../views/MapView.vue'
+import ReplayView from '../views/ReplayView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -28,6 +29,11 @@ const router = createRouter({
       path: '/map',
       name: 'map',
       component: MapView
+    },
+    {
+      path: '/replay',
+      name: 'replay',
+      component: ReplayView
     }
   ]
 })

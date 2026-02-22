@@ -7,7 +7,7 @@ import inspect
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from contextlib import asynccontextmanager
 from typing import Dict, Any, List
-from .api import files, configs, registry, requirements
+from .api import files, configs, registry, requirements, recordings
 from fastapi.middleware.cors import CORSMiddleware
 from .services.simulation_manager import simulation_manager, SimulationStatus
 from .services.log_watcher import log_watcher
@@ -49,6 +49,7 @@ app.include_router(files.router, prefix="/api/files", tags=["Files"])
 app.include_router(configs.router, prefix="/api/configs", tags=["Configs"])
 app.include_router(registry.router, prefix="/api/registry", tags=["Registry"])
 app.include_router(requirements.router, prefix="/api/requirements", tags=["Requirements"])
+app.include_router(recordings.router, prefix="/api/recordings", tags=["Recordings"])
 
 
 @app.get("/")
