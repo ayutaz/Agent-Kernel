@@ -26,6 +26,7 @@ class EasyPerceivePlugin(PerceivePlugin):
         self.last_tick_messages = []
         self.surrounding_agents = []
         self.friends = []
+        self.own_status = {}
         logger.info(f"EasyPerceivePlugin initialized.")
 
     async def init(self):
@@ -66,6 +67,12 @@ class EasyPerceivePlugin(PerceivePlugin):
             self.friends = await self.controller.run_environment("relation", "get_friends", self.agent_id)
         except Exception:
             self.friends = []
+
+        # Fetch own status from status environment
+        try:
+            self.own_status = await self.controller.run_environment("status", "get_status", self.agent_id)
+        except Exception:
+            self.own_status = {}
 
     async def get_received_messages(self) -> list:
         """Return a copy of currently received messages for external inspection."""

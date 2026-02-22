@@ -3,6 +3,7 @@ from agentkernel_standalone.mas.system.components import Messager, Recorder, Tim
 from agentkernel_standalone.mas.action.components import CommunicationComponent
 from agentkernel_standalone.mas.agent.components import *
 from agentkernel_standalone.mas.environment.components import RelationComponent, SpaceComponent
+from agentkernel_standalone.mas.environment.components.generic import create_component_class
 from examples.standalone_test.custom_controller import CustomController
 
 from examples.standalone_test.plugins.agent.invoke.EasyInvokePlugin import EasyInvokePlugin
@@ -15,6 +16,9 @@ from examples.standalone_test.plugins.agent.reflect.EasyReflectPlugin import Eas
 from examples.standalone_test.plugins.action.communication.EasyCommunicationPlugin import EasyCommunicationPlugin
 from examples.standalone_test.plugins.environment.relation.EasyRelationPlugin import EasyRelationPlugin
 from examples.standalone_test.plugins.environment.space.EasySpacePlugin import EasySpacePlugin
+from examples.standalone_test.plugins.environment.status.EasyStatusPlugin import EasyStatusPlugin
+
+StatusComponent = create_component_class("status")
 
 # Agent plugin and component registry
 
@@ -51,10 +55,12 @@ model_class_map = {
 environment_component_class_map = {
     "relation": RelationComponent,
     "space": SpaceComponent,
+    "status": StatusComponent,
 }
 environment_plugin_class_map = {
     "EasyRelationPlugin": EasyRelationPlugin,
     "EasySpacePlugin": EasySpacePlugin,
+    "EasyStatusPlugin": EasyStatusPlugin,
 }
 
 system_component_class_map = {

@@ -8,3 +8,7 @@ components:
     plugin:
       EasySpacePlugin:
         agents: 'map_agents'
+  status:
+    plugin:
+      EasyStatusPlugin:
+        statuses: 'agent_statuses'

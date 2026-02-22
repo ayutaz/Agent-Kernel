@@ -52,20 +52,6 @@ async def main():
             "map_size": 300,
         }
 
-        # Load agent status data
-        status_path = os.path.join(project_path, "data", "agents", "status_example.jsonl")
-        agent_status = {}
-        if os.path.isfile(status_path):
-            with open(status_path, "r", encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    entry = json.loads(line)
-                    agent_status[entry["id"]] = {
-                        k: v for k, v in entry.items() if k != "id"
-                    }
-
         # --- Simulation Loop ---
         max_ticks = sim_builder.config.simulation.max_ticks
         logger.info(f"--- Starting Simulation Run for {max_ticks} ticks ---")
@@ -80,8 +66,11 @@ async def main():
             await controller.step_agent()
             await system.run("messager", "dispatch_messages")
 
-            if isinstance(controller, CustomController):
-                await controller.update_agents_status()
+            # Apply natural tick decay to all agent statuses
+            try:
+                await controller.run_environment("status", "apply_tick_decay")
+            except Exception as e:
+                logger.warning(f"Failed to apply tick decay: {e}")
 
             tick_end_time = time.time()
             actual_tick_duration = tick_end_time - tick_start_time
@@ -109,11 +98,18 @@ async def main():
             # Record frame for Society Panel replay
             try:
                 agents = await controller.run_environment("space", "get_all_agents")
+
+                # Get dynamic statuses from environment plugin
+                try:
+                    all_statuses = await controller.run_environment("status", "get_all_statuses")
+                except Exception:
+                    all_statuses = {}
+
                 enriched_agents = []
                 for a in agents:
                     agent_entry = {"id": a["id"], "position": a["position"]}
-                    if a["id"] in agent_status:
-                        agent_entry["status"] = agent_status[a["id"]]
+                    if a["id"] in all_statuses:
+                        agent_entry["status"] = all_statuses[a["id"]]
                     enriched_agents.append(agent_entry)
 
                 recording_frames.append({

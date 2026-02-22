@@ -3,22 +3,35 @@ from agentkernel_standalone.toolkit.logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class EasyInvokePlugin(InvokePlugin):
-    """
-    Do what EasyPlanPlugin ask to do.
-    """
+    """Execute planned actions with status effects."""
+
     def __init__(self):
         super().__init__()
         self.agent_id = None
         self.plan_comp = None
         self.plans = []
         self.controller = None
+
     async def init(self):
         self.agent_id = self._component.agent.agent_id
         self.plan_comp = self._component.agent.get_component('plan')
         self.plan_plug = self.plan_comp._plugin
         self.controller = self._component.agent.controller
+        self.state_plug = self._component.agent.get_component('state')._plugin
+
     async def execute(self, current_tick: int):
+        # Energy check — force rest if too low
+        try:
+            status = await self.controller.run_environment("status", "get_status", self.agent_id)
+            if status.get("energy", 70) < 15:
+                logger.info(f"Agent {self.agent_id}: energy too low ({status['energy']}), forced rest")
+                await self._do_rest()
+                await self.state_plug.set_state("last_action", {"action": "rest"})
+                return
+        except Exception:
+            pass
 
         self.plans = self.plan_plug.plan
         for plan in self.plans:
@@ -28,24 +41,73 @@ class EasyInvokePlugin(InvokePlugin):
                     target = plan.get('target', [150, 150])
                     x = max(0, min(300, int(target[0])))
                     y = max(0, min(300, int(target[1])))
-                    await self.move_to_pos((x, y))
+                    await self._do_move((x, y))
                 elif action == 'chat':
                     target_id = plan.get('target', '')
                     content = plan.get('content', '')
                     if target_id and content:
-                        await self.chat_with_agent(target_id, content)
+                        await self._do_chat(target_id, content)
+                elif action == 'rest':
+                    await self._do_rest()
+                elif action == 'give':
+                    target_id = plan.get('target', '')
+                    amount = plan.get('amount', 100)
+                    if target_id:
+                        await self._do_give(target_id, amount)
+                elif action == 'help':
+                    target_id = plan.get('target', '')
+                    if target_id:
+                        await self._do_help(target_id)
                 else:
                     logger.warning(f"Agent {self.agent_id}: unknown action '{action}'")
+
+                # Record last action in state
+                await self.state_plug.set_state("last_action", plan)
             except Exception as e:
                 logger.error(f"Agent {self.agent_id}: error executing plan: {e}")
 
-    async def move_to_pos(self, target: tuple[int, int]):
-        await self.controller.run_environment('space', 'update_agent_position',
-                                        agent_id = self.agent_id,
-                                        new_position = target
-                                        )
-        logger.info(f'Agent {self._component.agent.agent_id} move to {target}')
+    async def _update_status(self, agent_id: str, changes: dict):
+        """Helper to update status with error handling."""
+        try:
+            await self.controller.run_environment("status", "update_status", agent_id, changes)
+        except Exception as e:
+            logger.warning(f"Agent {self.agent_id}: failed to update status for {agent_id}: {e}")
 
-    async def chat_with_agent(self, target_id: str, content: str):
-        await self.controller.run_action('communication', 'send_message', from_id =self.agent_id, to_id = target_id, content = content)
-        logger.info(f'Agent {self._component.agent.agent_id} say to {target_id} : {content}')
+    async def _do_move(self, target: tuple):
+        await self.controller.run_environment('space', 'update_agent_position',
+                                              agent_id=self.agent_id, new_position=target)
+        await self._update_status(self.agent_id, {"energy": -5})
+        logger.info(f'Agent {self.agent_id} moved to {target}')
+
+    async def _do_chat(self, target_id: str, content: str):
+        await self.controller.run_action('communication', 'send_message',
+                                         from_id=self.agent_id, to_id=target_id, content=content)
+        await self._update_status(self.agent_id, {"energy": -2, "socialization": 5, "happiness": 3})
+        await self._update_status(target_id, {"socialization": 5, "happiness": 3})
+        logger.info(f'Agent {self.agent_id} chatted with {target_id}: {content}')
+
+    async def _do_rest(self):
+        await self._update_status(self.agent_id, {"energy": 20, "stress": -10})
+        logger.info(f'Agent {self.agent_id} rested')
+
+    async def _do_give(self, target_id: str, amount):
+        try:
+            amount = int(amount)
+        except (ValueError, TypeError):
+            amount = 100
+        amount = max(1, min(500, amount))
+        try:
+            success = await self.controller.run_environment("status", "transfer_money",
+                                                            self.agent_id, target_id, amount)
+            if success:
+                await self._update_status(self.agent_id, {"happiness": 2, "socialization": 3})
+                logger.info(f'Agent {self.agent_id} gave {amount} money to {target_id}')
+            else:
+                logger.info(f'Agent {self.agent_id} tried to give money to {target_id} but insufficient funds')
+        except Exception as e:
+            logger.warning(f"Agent {self.agent_id}: give action failed: {e}")
+
+    async def _do_help(self, target_id: str):
+        await self._update_status(self.agent_id, {"energy": -3, "happiness": 5, "socialization": 3})
+        await self._update_status(target_id, {"stress": -15, "happiness": 10})
+        logger.info(f'Agent {self.agent_id} helped {target_id}')

@@ -26,4 +26,5 @@ data:
   # Environment-related data
   agents_relation: "data/relation/relation.jsonl"
   map_agents: "data/map/agents.jsonl"
+  agent_statuses: "data/agents/status.jsonl"
 
