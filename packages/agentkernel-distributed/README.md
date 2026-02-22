@@ -26,10 +26,10 @@ uv sync --all-extras
 
 ### 3. PyPI からインストール
 
-`pip` を使って Agent-Kernel 分散版を直接インストールできます。
+`uv` を使って Agent-Kernel 分散版を直接インストールできます。
 
 ```bash
-pip install agentkernel-distributed
+uv add agentkernel-distributed
 ```
 
 > 分散版パッケージは Ray に依存しており、自動的にインストールされます。
@@ -46,11 +46,11 @@ Agent-Kernel 分散版は、Web サービスやストレージソリューショ
 
 ```bash
 # Web 機能付きでインストール
-pip install "agentkernel-distributed[web]"
+uv add "agentkernel-distributed[web]"
 
 # ストレージ機能付きでインストール
-pip install "agentkernel-distributed[storages]"
+uv add "agentkernel-distributed[storages]"
 
 # 全オプション機能付きでインストール
-pip install "agentkernel-distributed[all]"
+uv add "agentkernel-distributed[all]"
 ```

@@ -26,10 +26,10 @@ uv sync --all-extras
 
 ### 3. PyPI からインストール
 
-`pip` を使って Agent-Kernel スタンドアロン版を直接インストールできます。
+`uv` を使って Agent-Kernel スタンドアロン版を直接インストールできます。
 
 ```bash
-pip install agentkernel-standalone
+uv add agentkernel-standalone
 ```
 
 **オプション機能のインストール**
@@ -44,11 +44,11 @@ Agent-Kernel スタンドアロン版は、Web サービスやストレージソ
 
 ```bash
 # Web 機能付きでインストール
-pip install "agentkernel-standalone[web]"
+uv add "agentkernel-standalone[web]"
 
 # ストレージ機能付きでインストール
-pip install "agentkernel-standalone[storages]"
+uv add "agentkernel-standalone[storages]"
 
 # 全オプション機能付きでインストール
-pip install "agentkernel-standalone[all]"
+uv add "agentkernel-standalone[all]"
 ```
