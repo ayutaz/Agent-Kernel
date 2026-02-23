@@ -201,7 +201,7 @@ uv sync --all-extras    # .venv を自動作成し、全依存関係をインス
 **Agent-Kernel スタンドアロン版**
 
 ```bash
-pip install agentkernel-standalone
+uv add agentkernel-standalone
 ```
 
 👉 詳しい使い方と例は [スタンドアロン版 README](examples/standalone_test/README.md) をご覧ください。
@@ -209,7 +209,7 @@ pip install agentkernel-standalone
 **Agent-Kernel 分散版**
 
 ```bash
-pip install agentkernel-distributed
+uv add agentkernel-distributed
 ```
 
 > 注: 分散版パッケージは **Ray** に依存しており、自動的にインストールされます。
@@ -228,13 +228,13 @@ pip install agentkernel-distributed
 
 ```bash
 # スタンドアロン版に Web 機能を追加
-pip install "agentkernel-standalone[web]"
+uv add "agentkernel-standalone[web]"
 
 # 分散版にストレージ機能を追加
-pip install "agentkernel-distributed[storages]"
+uv add "agentkernel-distributed[storages]"
 
 # 分散版に全オプション機能を追加
-pip install "agentkernel-distributed[all]"
+uv add "agentkernel-distributed[all]"
 ```
 
 ### 3. （オプション）Society-Panel の起動
