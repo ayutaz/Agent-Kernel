@@ -221,6 +221,24 @@ RESOURCES_MAPS = {
 - `examples/standalone_test/plugins/agent/invoke/SurveyInvokePlugin.py` — share_observationアクション実行プラグイン
 - `examples/standalone_test/plugins/agent/perceive/SurveyPerceivePlugin.py` — 地域観測知覚プラグイン
 - `examples/standalone_test/run_wisdom_experiment.py` — 集合知スケーリング実験ランナー（wisdom / survey 両シナリオ対応）
+- `society-panel/frontend/src/composables/useSurveyAnalytics.js` — Survey可視化用データ変換composable
+- `society-panel/frontend/src/components/analysis/survey/` — Survey専用チャートコンポーネント群（6ファイル）
+
+### Survey可視化ダッシュボード
+
+`/analysis` ルートの `AnalysisView.vue` が `metadata.experiment_type === 'disaster_response_survey'` を自動検出し、Survey専用の6チャートに切替表示する。
+
+- **データ層**: `useSurveyAnalytics.js` が `frame.survey_metrics` からtick毎の時系列データを集約
+- **切替UI**: `activeTab` ref + `showSurveyCharts` computed でタブ切替（一般分析 / 災害調査分析）
+- **チャート群**（`components/analysis/survey/`）:
+  - `SurveyKpiCards.vue` — 4 KPIカード（RMSE, Bonus, Coverage, Agent数）
+  - `RmseConvergenceChart.vue` — 折れ線3本（collective / avg_individual / best_individual RMSE）
+  - `DiversityBonusChart.vue` — エリア折れ線（diversity_bonus推移）
+  - `AttributeCoverageChart.vue` — ステップエリア + markLine（coverage 0%→100%）
+  - `SpecialistDistributionChart.vue` — ドーナツ円（5専門家構成比）
+  - `SurveyRegionMapChart.vue` — EffectScatter + Scatter（300×300マップ: 5候補地 + エージェント職業別色分け）
+- **後方互換**: 非Survey録画では従来の7チャートがそのまま表示される
+- **カラーマップ**: structural_engineer=#ef4444, medical_officer=#3b82f6, logistics_coordinator=#22c55e, safety_inspector=#f59e0b, community_liaison=#8b5cf6
 
 ## 技術スタック
 

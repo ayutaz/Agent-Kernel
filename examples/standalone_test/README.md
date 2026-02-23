@@ -130,3 +130,56 @@ uv run python -m examples.standalone_test.run_wisdom_experiment survey
 ```
 
 結果は `society-panel/backend/recordings/` に `survey_N{n}_S{seed}_*.json`（個別）と `survey_scaling_results_*.json`（集約）として保存されます。
+
+### 実験結果
+
+27条件（18実験群 + 9対照群）の実験結果サマリー:
+
+#### 実験群（混合専門家チーム）
+
+| N | Collective RMSE | Avg Individual RMSE | Diversity Bonus | Coverage |
+|---|---|---|---|---|
+| 10 | 3.44 | 8.74 | 5.30 | 100% |
+| 20 | 1.86 | 11.83 | 9.96 | 100% |
+| 40 | 2.37 | 13.34 | 10.97 | 100% |
+| 60 | 2.77 | 14.09 | 11.32 | 100% |
+| 80 | 3.11 | 14.61 | 11.50 | 100% |
+| 120 | 2.59 | 15.63 | 13.05 | 100% |
+
+#### 対照群（全員 structural_engineer）
+
+| N | Collective RMSE | Avg Individual RMSE | Diversity Bonus | Coverage |
+|---|---|---|---|---|
+| 10 | 18.27 | 19.59 | 1.33 | 40% |
+| 40 | 19.19 | 20.66 | 1.47 | 40% |
+| 120 | 18.68 | 20.22 | 1.54 | 40% |
+
+#### 主要な知見
+
+1. **集合知の効果**: 多様な専門家チーム（RMSE ≈ 2〜3）vs 同質チーム（RMSE ≈ 18〜19）で桁違いの精度差
+2. **属性カバレッジ**: 実験群は全条件で100%到達、対照群は40%止まり（2属性のみ観測可能なため）
+3. **Diversity Bonus の拡大**: エージェント数の増加に伴い集団利得が拡大（N=10で5.30 → N=120で13.05）
+4. **個体RMSEの増加**: 個体平均RMSEはN増加で悪化する一方、集団RMSEは安定して低い値を維持
+
+### 可視化ダッシュボード
+
+Society Panel の `/analysis` ルートで、Survey録画を選択すると専用の可視化ダッシュボードが自動的に表示されます。
+
+#### チャート構成（6コンポーネント）
+
+| チャート | 種別 | 表示内容 |
+|---------|------|---------|
+| KPIカード | 4カード | Collective RMSE / Diversity Bonus / Coverage / Agent数 |
+| RMSE収束曲線 | 折れ線（3本） | collective vs avg_individual vs best_individual RMSE の推移 |
+| 多様性ボーナス | エリア折れ線 | diversity_bonus のtick推移 |
+| 属性カバレッジ | ステップエリア | attribute_coverage 0%→100% の進捗 |
+| 専門家構成 | ドーナツ円 | 5専門家の構成比 |
+| 候補地マップ | 散布図 | 300×300マップ上の5候補地 + エージェント（職業別色分け） |
+
+#### 使い方
+
+1. Society Panel を起動: `scripts\start_society_panel.bat`（Windows）または `./scripts/start_society_panel.sh`（Linux/macOS）
+2. `http://localhost:5174` にアクセスし、サイドバーから「分析」を選択
+3. 録画選択ドロップダウンから `survey_mixed_N*` または `survey_control_N*` を選択
+4. Survey録画の自動検出により「災害調査分析」タブがアクティブになり、6チャートが表示される
+5. 「一般分析」タブに切り替えると、従来のステータス時系列・アクション分布等も閲覧可能

@@ -123,11 +123,14 @@ uv run python -m examples.standalone_test.run_wisdom_experiment
 - **実験群**: 混合専門家（N=10, 20, 40, 60, 80, 120）× 3シード = 18回
 - **対照群**: 全員同一職業（N=10, 40, 120）× 3シード = 9回
 - **指標**: collective_rmse, diversity_bonus, attribute_coverage 等
+- **結果**: 多様な専門家チーム（RMSE ≈ 2〜3）vs 同質チーム（RMSE ≈ 18〜19）で桁違いの精度差を確認。Diversity Bonus はN増加に伴い5→13へ拡大
 
 ```bash
 # 27条件の自動実行
 uv run python -m examples.standalone_test.run_wisdom_experiment survey
 ```
+
+実験結果は Society Panel の分析ダッシュボード（`/analysis`）で可視化できます。Survey録画を選択すると、RMSE収束曲線・多様性ボーナス・属性カバレッジ・専門家構成・候補地マップの6チャートが自動表示されます。詳細は [standalone_test README](examples/standalone_test/README.md) を参照してください。
 
 ## 📍 目次
 
