@@ -38,8 +38,11 @@ uv run python -m examples.standalone_test.run_simulation
 # 分散版
 uv run python -m examples.distributed_test.run_simulation
 
-# 集合知スケーリング実験（Wisdom of Crowds）
+# 集合知スケーリング実験（Wisdom of Crowds — 知識断片探索）
 uv run python -m examples.standalone_test.run_wisdom_experiment
+
+# 災害対応サーベイ実験（Wisdom of Crowds — 避難候補地評価）
+uv run python -m examples.standalone_test.run_wisdom_experiment survey
 ```
 実行前にAPIキーを設定すること。以下のいずれかの方法:
 1. **`.env`ファイル（推奨）** — リポジトリルートに `.env` を作成し `OPENAI_API_KEY=sk-...` を記載
@@ -145,13 +148,26 @@ components/*.py         →  各種Component定義
 
 ### 集合知スケーリング実験（Wisdom of Crowds）
 
-個体では解けないが集団なら解けるタスクを導入し、エージェント数とパフォーマンスの関係（スケーリング則）を測定する実験フレームワーク。
+個体では解けないが集団なら解けるタスクを導入し、エージェント数とパフォーマンスの関係（スケーリング則）を測定する実験フレームワーク。2つのシナリオを提供する。
+
+#### シナリオ1: 知識断片探索（wisdom）
 
 - **タスク**: 300x300マップ上に20個の「知識断片」をランダム配置。各エージェントは視認距離30以内の断片しか発見できず、`share_knowledge` アクションで他エージェントに知識を伝播する
 - **実験ランナー**: `run_wisdom_experiment.py` が6条件（N=10,20,40,60,80,120）× 3シード = 18回のシミュレーションを自動実行
 - **集団指標**: `KnowledgePoolPlugin.get_collective_metrics()` が `global_coverage`, `avg_individual_knowledge`, `knowledge_gini`, `knowledge_velocity` 等をtick毎に計算
 - **プラグイン構成**: `WisdomPerceivePlugin`（知識発見）、`WisdomPlanPlugin`（知識共有プロンプト）、`WisdomInvokePlugin`（share_knowledgeアクション）、`KnowledgePoolPlugin`（知識断片管理環境）
 - **設定**: `wisdom_simulation_config.yaml` → `wisdom_agents_config.yaml` + `wisdom_environment_config.yaml`
+
+#### シナリオ2: 災害対応サーベイ（survey）
+
+- **タスク**: 地震後の5つの避難候補地を評価。各候補地は5属性（structural, water, medical, supply, shelter）を持ち、各専門家は2属性のみ観測可能（リング構造）。多様な専門家の情報統合が集団推定精度を向上させる
+- **専門家**: 5職業（structural_engineer, medical_officer, logistics_coordinator, safety_inspector, community_liaison）がリング状に属性を共有。各属性はちょうど2職業がカバー
+- **観測ノイズ**: 真値 ± uniform(-5, +5)、[0, 20]にクリップ。ノイズは `hashlib.sha256` で決定論的に生成（再現性保証）
+- **推定**: 既知属性の平均値を5属性に外挿（`total * 5/n_known`）。集団推定 = 全エージェント推定の平均
+- **実験条件**: 実験群（混合専門家 N=10,20,40,60,80,120）+ 対照群（全員structural_engineer N=10,40,120）× 3シード = 27回
+- **集団指標**: `RegionalSurveyPlugin.get_survey_metrics()` が `collective_rmse`, `avg_individual_rmse`, `diversity_bonus`, `attribute_coverage`, `estimate_correlation` を計算
+- **プラグイン構成**: `SurveyPerceivePlugin`（地域観測）、`SurveyPlanPlugin`（災害対応プロンプト）、`SurveyInvokePlugin`（share_observationアクション）、`RegionalSurveyPlugin`（地域属性管理環境）
+- **設定**: `survey_simulation_config.yaml` → `survey_agents_config.yaml` + `survey_environment_config.yaml`
 
 ### リソースマップ
 
@@ -200,7 +216,11 @@ RESOURCES_MAPS = {
 - `examples/standalone_test/plugins/agent/plan/WisdomPlanPlugin.py` — 知識共有行動計画プラグイン
 - `examples/standalone_test/plugins/agent/invoke/WisdomInvokePlugin.py` — share_knowledgeアクション実行プラグイン
 - `examples/standalone_test/plugins/agent/perceive/WisdomPerceivePlugin.py` — 知識発見知覚プラグイン
-- `examples/standalone_test/run_wisdom_experiment.py` — 集合知スケーリング実験ランナー
+- `examples/standalone_test/plugins/environment/knowledge/RegionalSurveyPlugin.py` — 地域属性管理プラグイン（Survey実験用）
+- `examples/standalone_test/plugins/agent/plan/SurveyPlanPlugin.py` — 災害対応行動計画プラグイン
+- `examples/standalone_test/plugins/agent/invoke/SurveyInvokePlugin.py` — share_observationアクション実行プラグイン
+- `examples/standalone_test/plugins/agent/perceive/SurveyPerceivePlugin.py` — 地域観測知覚プラグイン
+- `examples/standalone_test/run_wisdom_experiment.py` — 集合知スケーリング実験ランナー（wisdom / survey 両シナリオ対応）
 
 ## 技術スタック
 
