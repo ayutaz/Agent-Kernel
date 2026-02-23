@@ -41,6 +41,10 @@ export const useReplayStore = defineStore('replay', () => {
     return currentFrame.value ? (currentFrame.value.messages || []) : []
   })
 
+  const profiles = computed(() => {
+    return recording.value?.metadata?.profiles || {}
+  })
+
   const agentTrails = computed(() => {
     if (!recording.value) return {}
     const trailLength = 5
@@ -185,6 +189,7 @@ export const useReplayStore = defineStore('replay', () => {
     totalFrames,
     mapSize,
     messages,
+    profiles,
     agentTrails,
     fetchRecordings,
     loadRecording,

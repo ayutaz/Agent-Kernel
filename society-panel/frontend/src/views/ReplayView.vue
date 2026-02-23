@@ -5,6 +5,7 @@ import { useReplayStore } from '../stores/replay'
 import AgentMapCanvas from '../components/map/AgentMapCanvas.vue'
 import PlaybackControls from '../components/replay/PlaybackControls.vue'
 import RecordingList from '../components/replay/RecordingList.vue'
+import ReplaySummaryStrip from '../components/replay/ReplaySummaryStrip.vue'
 
 const replayStore = useReplayStore()
 
@@ -88,6 +89,7 @@ const filteredMessages = computed(() => {
           </div>
         </div>
 
+        <ReplaySummaryStrip v-if="replayStore.recording" />
         <PlaybackControls v-if="replayStore.recording" />
       </div>
 

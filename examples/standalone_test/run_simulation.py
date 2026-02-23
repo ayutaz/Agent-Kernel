@@ -52,6 +52,22 @@ async def main():
             "map_size": 300,
         }
 
+        # --- Load agent profiles for recording metadata ---
+        profiles_path = os.path.join(project_path, "data", "agents", "profiles.jsonl")
+        profiles_map = {}
+        if os.path.exists(profiles_path):
+            with open(profiles_path, "r", encoding="utf-8") as f:
+                for line in f:
+                    line = line.strip()
+                    if line:
+                        p = json.loads(line)
+                        profiles_map[p["id"]] = {
+                            "personality": p.get("personality", ""),
+                            "occupation": p.get("occupation", ""),
+                            "goal": p.get("goal", ""),
+                        }
+        recording_metadata["profiles"] = profiles_map
+
         # --- Simulation Loop ---
         max_ticks = sim_builder.config.simulation.max_ticks
         logger.info(f"--- Starting Simulation Run for {max_ticks} ticks ---")
@@ -81,17 +97,18 @@ async def main():
 
             logger.info(f"--- Tick {current_tick} finished in {actual_tick_duration:.4f} seconds ---")
 
-            # Collect messages delivered this tick
+            # Collect messages sent this tick (from invoke plugin)
             tick_messages = []
             for agent_id in controller.get_agent_ids():
                 try:
-                    msgs = await controller.run_agent_method(agent_id, "perceive", "get_received_messages")
-                    for msg in msgs:
-                        tick_messages.append({
-                            "from_id": msg.get("from_id", ""),
-                            "to_id": agent_id,
-                            "content": msg.get("content", ""),
-                        })
+                    msgs = await controller.run_agent_method(agent_id, "invoke", "sent_messages")
+                    if msgs:
+                        for msg in msgs:
+                            tick_messages.append({
+                                "from_id": msg.get("from_id", ""),
+                                "to_id": msg.get("to_id", ""),
+                                "content": msg.get("content", ""),
+                            })
                 except Exception as e:
                     logger.warning(f"Failed to get messages for {agent_id}: {e}")
 
@@ -110,6 +127,13 @@ async def main():
                     agent_entry = {"id": a["id"], "position": a["position"]}
                     if a["id"] in all_statuses:
                         agent_entry["status"] = all_statuses[a["id"]]
+                    # Get last action type
+                    try:
+                        last_action = await controller.run_agent_method(a["id"], "state", "get_state", "last_action")
+                        if last_action and isinstance(last_action, dict):
+                            agent_entry["action"] = last_action.get("action", "unknown")
+                    except Exception:
+                        pass
                     enriched_agents.append(agent_entry)
 
                 recording_frames.append({

@@ -34,6 +34,11 @@ const router = createRouter({
       path: '/replay',
       name: 'replay',
       component: ReplayView
+    },
+    {
+      path: '/analysis',
+      name: 'analysis',
+      component: () => import('../views/AnalysisView.vue')
     }
   ]
 })

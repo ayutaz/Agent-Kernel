@@ -23,6 +23,7 @@ const themeStore = useThemeStore()
         <RouterLink class="ak-link" to="/">ダッシュボード</RouterLink>
         <RouterLink class="ak-link" to="/map">エージェントマップ</RouterLink>
         <RouterLink class="ak-link" to="/replay">録画再生</RouterLink>
+        <RouterLink class="ak-link" to="/analysis">分析</RouterLink>
         <RouterLink class="ak-link" to="/files">ファイル管理</RouterLink>
         <RouterLink class="ak-link" to="/configs">設定</RouterLink>
       </nav>

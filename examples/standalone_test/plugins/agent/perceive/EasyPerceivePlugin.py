@@ -62,6 +62,14 @@ class EasyPerceivePlugin(PerceivePlugin):
 
         logger.info(f"Agent {self.agent_id} looked around, and found {len(self.surrounding_agents)} agents.")
 
+        # Enrich nearby agents with their status info (max 10)
+        for agent in self.surrounding_agents[:10]:
+            try:
+                st = await self.controller.run_environment("status", "get_status", agent["id"])
+                agent["status"] = st
+            except Exception:
+                pass
+
         # Fetch friend list from relation environment
         try:
             self.friends = await self.controller.run_environment("relation", "get_friends", self.agent_id)

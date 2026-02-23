@@ -13,6 +13,7 @@ class EasyInvokePlugin(InvokePlugin):
         self.plan_comp = None
         self.plans = []
         self.controller = None
+        self.sent_messages = []
 
     async def init(self):
         self.agent_id = self._component.agent.agent_id
@@ -22,6 +23,7 @@ class EasyInvokePlugin(InvokePlugin):
         self.state_plug = self._component.agent.get_component('state')._plugin
 
     async def execute(self, current_tick: int):
+        self.sent_messages = []
         # Energy check — force rest if too low
         try:
             status = await self.controller.run_environment("status", "get_status", self.agent_id)
@@ -82,8 +84,9 @@ class EasyInvokePlugin(InvokePlugin):
     async def _do_chat(self, target_id: str, content: str):
         await self.controller.run_action('communication', 'send_message',
                                          from_id=self.agent_id, to_id=target_id, content=content)
-        await self._update_status(self.agent_id, {"energy": -2, "socialization": 5, "happiness": 3})
-        await self._update_status(target_id, {"socialization": 5, "happiness": 3})
+        await self._update_status(self.agent_id, {"energy": -5, "socialization": 5, "happiness": 3, "stress": 1})
+        await self._update_status(target_id, {"socialization": 3, "happiness": 2})
+        self.sent_messages.append({"from_id": self.agent_id, "to_id": target_id, "content": content})
         logger.info(f'Agent {self.agent_id} chatted with {target_id}: {content}')
 
     async def _do_rest(self):
@@ -100,7 +103,8 @@ class EasyInvokePlugin(InvokePlugin):
             success = await self.controller.run_environment("status", "transfer_money",
                                                             self.agent_id, target_id, amount)
             if success:
-                await self._update_status(self.agent_id, {"happiness": 2, "socialization": 3})
+                await self._update_status(self.agent_id, {"happiness": 5, "socialization": 5})
+                await self._update_status(target_id, {"happiness": 3})
                 logger.info(f'Agent {self.agent_id} gave {amount} money to {target_id}')
             else:
                 logger.info(f'Agent {self.agent_id} tried to give money to {target_id} but insufficient funds')
@@ -108,6 +112,6 @@ class EasyInvokePlugin(InvokePlugin):
             logger.warning(f"Agent {self.agent_id}: give action failed: {e}")
 
     async def _do_help(self, target_id: str):
-        await self._update_status(self.agent_id, {"energy": -3, "happiness": 5, "socialization": 3})
+        await self._update_status(self.agent_id, {"energy": -3, "happiness": 8, "socialization": 5})
         await self._update_status(target_id, {"stress": -15, "happiness": 10})
         logger.info(f'Agent {self.agent_id} helped {target_id}')

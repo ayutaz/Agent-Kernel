@@ -69,7 +69,16 @@ class EasyStatusPlugin(GenericPlugin):
         return True
 
     async def apply_tick_decay(self) -> None:
-        """Per-tick natural recovery: energy +3, stress -2 for all agents."""
+        """Per-tick natural changes: energy +1, stress -1, happiness -2, socialization -3, money -15."""
         for agent_id in self._statuses:
-            self._statuses[agent_id]["energy"] = min(100, self._statuses[agent_id]["energy"] + 3)
-            self._statuses[agent_id]["stress"] = max(0, self._statuses[agent_id]["stress"] - 2)
+            s = self._statuses[agent_id]
+            # Energy: slow natural recovery
+            s["energy"] = min(100, s["energy"] + 1)
+            # Stress: slow natural decay
+            s["stress"] = max(0, s["stress"] - 1)
+            # Happiness: natural decay (prevents saturation)
+            s["happiness"] = max(0, s["happiness"] - 2)
+            # Socialization: natural decay (requires ongoing interaction)
+            s["socialization"] = max(0, s["socialization"] - 3)
+            # Money: living cost
+            s["money"] = max(0, s["money"] - 15)
