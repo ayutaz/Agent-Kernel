@@ -1,0 +1,19 @@
+# ===================================================================
+# Disaster Response Survey Experiment - Simulation Configuration
+
+simulation:
+  max_ticks: 50
+
+configs:
+  environment: "survey_environment_config.yaml"
+  actions: "actions_config.yaml"
+  agent_templates: "survey_agents_config.yaml"
+  system: "system_config.yaml"
+  database: "db_config.yaml"
+  models: "models_config.yaml"
+
+data:
+  agent_profiles: "data/survey_temp/profiles.jsonl"
+  agents_relation: "data/survey_temp/relation.jsonl"
+  map_agents: "data/survey_temp/agents.jsonl"
+  agent_statuses: "data/survey_temp/status.jsonl"

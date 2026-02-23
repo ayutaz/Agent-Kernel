@@ -1,0 +1,28 @@
+templates:
+  - name: "SurveyAgent"
+    component_order:
+        - "perceive"
+        - "state"
+        - "plan"
+        - "invoke"
+        - "reflect"
+    components:
+      profile:
+        plugin:
+          EasyProfilePlugin:
+            profile_data: "agent_profiles"
+      state:
+        plugin:
+          EasyStatePlugin: {}
+      plan:
+        plugin:
+          SurveyPlanPlugin: {}
+      invoke:
+        plugin:
+          SurveyInvokePlugin: {}
+      perceive:
+        plugin:
+          SurveyPerceivePlugin: {}
+      reflect:
+        plugin:
+          EasyReflectPlugin: {}
