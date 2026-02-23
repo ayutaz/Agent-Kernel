@@ -45,6 +45,7 @@ society-panel/backend/recordings/
 tmp_*.json
 nul
 
-# Wisdom experiment temp data
+# Wisdom/Survey experiment temp data
 examples/standalone_test/data/wisdom_temp/
+examples/standalone_test/data/survey_temp/
 *.yaml.bak
