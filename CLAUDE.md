@@ -47,8 +47,8 @@ uv run python -m examples.distributed_test.run_simulation
 
 ### インストール（PyPIエンドユーザー向け）
 ```bash
-pip install "agentkernel-standalone[all]"     # スタンドアロン版（全依存込み）
-pip install "agentkernel-distributed[all]"    # 分散版（全依存込み）
+uv add "agentkernel-standalone[all]"     # スタンドアロン版（全依存込み）
+uv add "agentkernel-distributed[all]"    # 分散版（全依存込み）
 ```
 オプション依存: `[web]`（FastAPI/aiohttp）、`[storages]`（asyncpg/Redis/Milvus）、`[all]`（全部）
 
