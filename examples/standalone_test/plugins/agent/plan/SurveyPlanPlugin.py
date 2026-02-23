@@ -88,6 +88,22 @@ class SurveyPlanPlugin(PlanPlugin):
                 obs_lines.append(f"{rname}: {', '.join(attr_parts)} (estimated total: {est_str}, {n_attrs}/5 attrs)")
         obs_text = "\n".join(obs_lines) if obs_lines else "No observations yet"
 
+        # Build estimates text
+        est_lines = []
+        for rid, rinfo in REGION_COORDS.items():
+            est_val = estimates.get(rid)
+            if est_val is not None:
+                est_lines.append(f"- {rinfo['name']}: {est_val:.0f}")
+        estimates_text = "\n".join(est_lines) if est_lines else "No estimates yet"
+
+        # Build recent context
+        recent_convos = conversation_history[-3:] if conversation_history else []
+        context_text = ""
+        if recent_convos:
+            context_text = f"\n=== RECENT CONVERSATIONS ===\n{json.dumps(recent_convos)}\n"
+        if last_reflection:
+            context_text += f"\nYour reflection: \"{last_reflection}\"\n"
+
         # Build unvisited sites text
         if unvisited_regions:
             unvisited_lines = []
@@ -127,6 +143,9 @@ You CANNOT assess the other 3 attributes — you need other specialists for that
 === YOUR OBSERVATIONS ===
 {obs_text}
 
+=== YOUR ESTIMATES (total score per site, true range 60-90) ===
+{estimates_text}
+{context_text}
 === UNVISITED SITES ===
 {unvisited_text}
 

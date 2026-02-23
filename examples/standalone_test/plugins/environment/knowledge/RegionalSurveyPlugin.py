@@ -1,5 +1,6 @@
 import random
 import math
+import hashlib
 from typing import Dict, Any, List, Optional, Set
 from agentkernel_standalone.mas.environment.base.plugin_base import GenericPlugin
 from agentkernel_standalone.toolkit.logger import get_logger
@@ -38,18 +39,23 @@ class RegionalSurveyPlugin(GenericPlugin):
         rng = random.Random(seed)
         self._true_values: Dict[str, Dict[str, float]] = {}
         for region in self.REGIONS:
-            attrs = {a: rng.randint(3, 18) for a in self.ALL_ATTRIBUTES}
-            total = sum(attrs.values())
-            # Ensure total is in [60, 90] range
-            if total < 60 or total > 90:
+            # Retry until total is in [60, 90] after clipping
+            for _ in range(100):
+                attrs = {a: rng.randint(3, 18) for a in self.ALL_ATTRIBUTES}
+                total = sum(attrs.values())
+                if 60 <= total <= 90:
+                    break
                 target = rng.uniform(60, 90)
                 scale = target / total
                 attrs = {a: max(0, min(20, round(v * scale))) for a, v in attrs.items()}
+                if 60 <= sum(attrs.values()) <= 90:
+                    break
             self._true_values[region["id"]] = attrs
 
         # Dict[agent_id, Dict[region_id, Dict[attr_name, List[float]]]]
         self._observations: Dict[str, Dict[str, Dict[str, List[float]]]] = {}
-        self._prev_total_coverage = 0  # for velocity tracking
+        # Track which (from_id, to_id) pairs have already shared to prevent duplicate transfers
+        self._shared_pairs: Set[tuple] = set()
 
         logger.info(
             f"RegionalSurveyPlugin initialized with {len(self.REGIONS)} regions, seed={seed}. "
@@ -80,32 +86,39 @@ class RegionalSurveyPlugin(GenericPlugin):
         if visible_attrs is None:
             return None
 
-        # Generate deterministic noise for each attribute
-        noise_seed = hash(f"{agent_id}_{region_id}") % (self.seed * 1000 + 1)
+        # Skip if already observed this region (same agent always gets same noise)
+        if agent_id in self._observations and region_id in self._observations[agent_id]:
+            return None
+
+        # Generate deterministic noise using hashlib (reproducible across processes)
+        hash_input = f"{agent_id}_{region_id}_{self.seed}".encode()
+        noise_seed = int(hashlib.sha256(hash_input).hexdigest(), 16) % (2**31)
         noise_rng = random.Random(noise_seed)
 
         observations = {}
+        if agent_id not in self._observations:
+            self._observations[agent_id] = {}
+        self._observations[agent_id][region_id] = {}
+
         for attr in visible_attrs:
             true_val = self._true_values[region_id][attr]
             noisy_val = true_val + noise_rng.uniform(-5, 5)
             noisy_val = max(0.0, min(20.0, round(noisy_val, 1)))
 
-            # Store observation
-            if agent_id not in self._observations:
-                self._observations[agent_id] = {}
-            if region_id not in self._observations[agent_id]:
-                self._observations[agent_id][region_id] = {}
-            if attr not in self._observations[agent_id][region_id]:
-                self._observations[agent_id][region_id][attr] = []
-            self._observations[agent_id][region_id][attr].append(noisy_val)
-
+            self._observations[agent_id][region_id][attr] = [noisy_val]
             observations[attr] = noisy_val
 
         logger.info(f"Agent {agent_id} ({occupation}) observed {region_name}: {observations}")
         return {"region": region_id, "region_name": region_name, "observations": observations}
 
     async def share_observations(self, from_id: str, to_id: str) -> int:
-        """Transfer ALL observations from from_id to to_id. Returns count of new attr-region pairs."""
+        """Transfer observations from from_id to to_id. Returns count of new attr-region pairs.
+        Each (from, to) pair only transfers once to prevent unbounded list growth."""
+        share_key = (from_id, to_id)
+        if share_key in self._shared_pairs:
+            logger.info(f"Agent {from_id} already shared with {to_id}, skipping")
+            return 0
+
         from_obs = self._observations.get(from_id, {})
         if not from_obs:
             return 0
@@ -118,12 +131,18 @@ class RegionalSurveyPlugin(GenericPlugin):
             if region_id not in self._observations[to_id]:
                 self._observations[to_id][region_id] = {}
             for attr, vals in attrs.items():
-                is_new = attr not in self._observations[to_id][region_id]
-                if is_new:
-                    self._observations[to_id][region_id][attr] = []
+                if attr not in self._observations[to_id][region_id]:
+                    self._observations[to_id][region_id][attr] = list(vals)
                     new_pairs += 1
-                self._observations[to_id][region_id][attr].extend(vals)
+                else:
+                    # Only add values not already present (deduplicate)
+                    existing = set(self._observations[to_id][region_id][attr])
+                    for v in vals:
+                        if v not in existing:
+                            self._observations[to_id][region_id][attr].append(v)
+                            existing.add(v)
 
+        self._shared_pairs.add(share_key)
         if new_pairs > 0:
             logger.info(f"Agent {from_id} shared observations with {to_id}: {new_pairs} new attr-region pairs")
         return new_pairs
