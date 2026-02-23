@@ -17,8 +17,13 @@ from examples.standalone_test.plugins.action.communication.EasyCommunicationPlug
 from examples.standalone_test.plugins.environment.relation.EasyRelationPlugin import EasyRelationPlugin
 from examples.standalone_test.plugins.environment.space.EasySpacePlugin import EasySpacePlugin
 from examples.standalone_test.plugins.environment.status.EasyStatusPlugin import EasyStatusPlugin
+from examples.standalone_test.plugins.environment.knowledge.KnowledgePoolPlugin import KnowledgePoolPlugin
+from examples.standalone_test.plugins.agent.plan.WisdomPlanPlugin import WisdomPlanPlugin
+from examples.standalone_test.plugins.agent.invoke.WisdomInvokePlugin import WisdomInvokePlugin
+from examples.standalone_test.plugins.agent.perceive.WisdomPerceivePlugin import WisdomPerceivePlugin
 
 StatusComponent = create_component_class("status")
+KnowledgeComponent = create_component_class("knowledge")
 
 # Agent plugin and component registry
 
@@ -29,6 +34,9 @@ agent_plugin_calss_map = {
     "EasyPlanPlugin": EasyPlanPlugin,
     "EasyInvokePlugin": EasyInvokePlugin,
     "EasyReflectPlugin": EasyReflectPlugin,
+    "WisdomPlanPlugin": WisdomPlanPlugin,
+    "WisdomInvokePlugin": WisdomInvokePlugin,
+    "WisdomPerceivePlugin": WisdomPerceivePlugin,
 }
 
 agent_component_class_map = {
@@ -56,11 +64,13 @@ environment_component_class_map = {
     "relation": RelationComponent,
     "space": SpaceComponent,
     "status": StatusComponent,
+    "knowledge": KnowledgeComponent,
 }
 environment_plugin_class_map = {
     "EasyRelationPlugin": EasyRelationPlugin,
     "EasySpacePlugin": EasySpacePlugin,
     "EasyStatusPlugin": EasyStatusPlugin,
+    "KnowledgePoolPlugin": KnowledgePoolPlugin,
 }
 
 system_component_class_map = {

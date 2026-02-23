@@ -1,0 +1,19 @@
+# ===================================================================
+# Wisdom of Crowds Experiment - Simulation Configuration
+
+simulation:
+  max_ticks: 100
+
+configs:
+  environment: "wisdom_environment_config.yaml"
+  actions: "actions_config.yaml"
+  agent_templates: "wisdom_agents_config.yaml"
+  system: "system_config.yaml"
+  database: "db_config.yaml"
+  models: "models_config.yaml"
+
+data:
+  agent_profiles: "data/wisdom_temp/profiles.jsonl"
+  agents_relation: "data/wisdom_temp/relation.jsonl"
+  map_agents: "data/wisdom_temp/agents.jsonl"
+  agent_statuses: "data/wisdom_temp/status.jsonl"

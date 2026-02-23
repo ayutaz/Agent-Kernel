@@ -44,3 +44,7 @@ society-panel/backend/recordings/
 # Temporary files
 tmp_*.json
 nul
+
+# Wisdom experiment temp data
+examples/standalone_test/data/wisdom_temp/
+*.yaml.bak

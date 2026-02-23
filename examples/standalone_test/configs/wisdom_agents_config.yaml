@@ -1,0 +1,28 @@
+templates:
+  - name: "WisdomAgent"
+    component_order:
+        - "perceive"
+        - "state"
+        - "plan"
+        - "invoke"
+        - "reflect"
+    components:
+      profile:
+        plugin:
+          EasyProfilePlugin:
+            profile_data: "agent_profiles"
+      state:
+        plugin:
+          EasyStatePlugin: {}
+      plan:
+        plugin:
+          WisdomPlanPlugin: {}
+      invoke:
+        plugin:
+          WisdomInvokePlugin: {}
+      perceive:
+        plugin:
+          WisdomPerceivePlugin: {}
+      reflect:
+        plugin:
+          EasyReflectPlugin: {}

@@ -1,0 +1,17 @@
+name: WisdomEnvironment
+components:
+  relation:
+    plugin:
+      EasyRelationPlugin:
+        relations: 'agents_relation'
+  space:
+    plugin:
+      EasySpacePlugin:
+        agents: 'map_agents'
+  status:
+    plugin:
+      EasyStatusPlugin:
+        statuses: 'agent_statuses'
+  knowledge:
+    plugin:
+      KnowledgePoolPlugin: {}
